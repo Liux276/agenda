@@ -35,8 +35,13 @@ Run: func(cmd *cobra.Command, args []string) {
 	users := entity.ReadUserInfoFromFile()
 	models.Logger.SetPrefix("[agenda login]")
 	// "fmt"
-		for _, userInfo := range users {
+		for i, userInfo := range users {
+			if userInfo.Login == true {
+				models.Logger.Println("Login", userInfo.Username, "has already in!")
+				fmt.Println(userInfo.username, "has already in!")
+			}
 			if userInfo.Username == loginUser.Username && userInfo.Password == loginUser.Password {
+				user[i].Login = true
 				models.Logger.Println("Login", loginUser.Username, "successfully!")
 				fmt.Println("Login successfully")
 			}
