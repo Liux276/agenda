@@ -1,12 +1,14 @@
 package entity
 
-import "bufio"
-import "os"
-import "io"
-import "log"
-import "fmt"
-import "github.com/json-iterator/go"
-import "github.com/sysu-615/agenda/models"
+import (
+	"bufio"
+	"fmt"
+	"github.com/json-iterator/go"
+	"github.com/sysu-615/agenda/models"
+	"io"
+	"log"
+	"os"
+)
 
 func ReadUserInfoFromFile() ([]models.User) {
 	var list []models.User
