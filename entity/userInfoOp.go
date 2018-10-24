@@ -36,11 +36,13 @@ func ReadUserInfoFromFile() ([]models.User) {
 			continue
 		} 
 
-		data = data[0:len(data)-1]
+		if data[len(data)-2] == ',' {
+			data = data[0:len(data)-2]
+		}
 		
 		err = jsoniter.Unmarshal(data, &user)
 		if err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
 			os.Exit(1)
 		}
 		

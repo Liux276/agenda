@@ -14,7 +14,7 @@ type Meeting models.Meeting
 
 func ReadMeetingFromFile() []Meeting {
 	var list []Meeting
-	file, err := os.OpenFile("agenda/storage/meeting.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile("agenda/storage/meetings.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -35,12 +35,16 @@ func ReadMeetingFromFile() []Meeting {
 		if len(data) <= 2 {
 			continue
 		} 
+		
+		fmt.Println(data[len(data)-2])
 
-		data = data[0:len(data)-1]
+		if data[len(data)-2] == ',' {
+			data = data[0:len(data)-2]
+		}
 		
 		err = jsoniter.Unmarshal(data, &meeting)
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 			os.Exit(1)
 		}
 		
@@ -51,7 +55,7 @@ func ReadMeetingFromFile() []Meeting {
 }
 
 func WriteMeetingToFile(list []Meeting) {
-	file, err := os.OpenFile("../storage/meeting.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile("../storage/meetings.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)

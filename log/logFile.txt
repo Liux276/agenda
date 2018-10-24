@@ -37,3 +37,12 @@
 [agenda register]2018/10/24 22:09:04 Register ac successfully!
 [agenda register]2018/10/24 22:10:31 Register ac successfully!
 [agenda register]2018/10/24 22:10:39 Register a successfully!
+[agenda register]2018/10/24 23:44:24 a has been registered!
+[agenda register]2018/10/24 23:44:29 Register aaa successfully!
+[agenda register]2018/10/24 23:44:33 Register avv successfully!
+[agenda register]2018/10/24 23:44:37 avv has been registered!
+[agenda register]2018/10/24 23:44:40 Register fffavv successfully!
+[agenda register]2018/10/24 23:44:47 fffavv has been registered!
+[agenda login]2018/10/24 23:45:00 Login fffavv successfully!
+[agenda login]2018/10/24 23:45:14 Login fffavv has already in!
+[agenda logout]2018/10/24 23:45:23 fffavv log out.
