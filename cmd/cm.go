@@ -16,22 +16,30 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/entity"
+	"github.com/sysu-615/agenda/models"
 )
+
+var createdMeeting models.Meeting
 
 // cmCmd represents the cm command
 var cmCmd = &cobra.Command{
 	Use:   "cm",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "This command can create a meeting",
+	Long:  `You can use agenda cm to create a meeting`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cm called")
+		meetings := entity.ReadMeetingFromFile()
+		// 查找所有的会议，查看Title是否重复
+		for _, meeting := range meetings {
+			if meeting.Title == createdMeeting.Title {
+				models.Logger.Println("The meeting's title", meeting.Title, "has been occupied")
+				fmt.Println("The meeting's title", meeting.Title, "has been occupied")
+				os.Exit(0)
+			}
+		}
 	},
 }
 
@@ -47,4 +55,10 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// cmCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	cmCmd.Flags().StringVarP(&createdMeeting.Title, "title", "t", "", "The Meeting's Title")
+	cmCmd.Flags().StringVarP(&createdMeeting.Originator, "originator", "o", "", "The Meeting's Originator")
+	cmCmd.Flags().StringVarP(&createdMeeting.Participants, "participants", "P", "", "The Meeting's Participants")
+	cmCmd.Flags().StringVarP(&createdMeeting.StartTime, "startTime", "s", "", "The Meeting's StartTime")
+	cmCmd.Flags().StringVarP(&createdMeeting.Endtime, "endtime", "e", "", "The Meeting's Endtime")
 }
