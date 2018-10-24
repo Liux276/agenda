@@ -3,23 +3,23 @@ package entity
 import (
 	"bufio"
 	"fmt"
-	"github.com/json-iterator/go"
-	"github.com/sysu-615/agenda/models"
 	"io"
 	"log"
 	"os"
+	"strings"
+
+	"github.com/json-iterator/go"
+	"github.com/sysu-615/agenda/models"
 )
 
-type Meeting models.Meeting
-
-func ReadMeetingFromFile() []Meeting {
-	var list []Meeting
-	file, err := os.OpenFile("agenda/storage/meeting.json", os.O_RDWR|os.O_CREATE, 0644)
+func ReadMeetingFromFile() []models.Meeting {
+	var list []models.Meeting
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meeting.json", os.O_RDONLY|os.O_CREATE, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)
 	}
-	var meeting Meeting
+	var meeting models.Meeting
 	reader := bufio.NewReader(file)
 	for {
 		data, errR := reader.ReadBytes('\n')
@@ -28,18 +28,17 @@ func ReadMeetingFromFile() []Meeting {
 			if errR == io.EOF {
 				break
 			} else {
-				os.Stderr.Write([]byte("Read bytes from reader fail\n"))
+				os.Stderr.Write([]byte("Read bytes from reader failed\n"))
 				os.Exit(0)
 			}
 		}
-		fmt.Println(meeting)
 		list = append(list, meeting)
 	}
 	return list
 }
 
-func WriteMeetingToFile(list []Meeting) {
-	file, err := os.OpenFile("../storage/meeting.json", os.O_RDWR|os.O_CREATE, 0644)
+func WriteMeetingToFile(list []models.Meeting) {
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meeting.json", os.O_WRONLY|os.O_CREATE, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -49,15 +48,50 @@ func WriteMeetingToFile(list []Meeting) {
 	for _, meeting := range list {
 		// 序列化
 		data, err := jsoniter.Marshal(&meeting)
+
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(string(data))
-		_, errW := writer.Write([]byte(string(data)))
+		_, errW := writer.Write(data)
 		writer.WriteByte('\n')
 		if errW != nil {
 			fmt.Println(errW)
 		}
 		writer.Flush()
 	}
+}
+
+func FetchMeetingsByName(name string) []models.Meeting {
+	var list []models.Meeting
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meeting.json", os.O_RDONLY|os.O_CREATE, 0644)
+	defer file.Close()
+	if err != nil {
+		panic(err)
+	}
+	var meeting models.Meeting
+	reader := bufio.NewReader(file)
+	for {
+		data, errR := reader.ReadBytes('\n')
+		err = jsoniter.Unmarshal(data, &meeting)
+		if errR != nil {
+			if errR == io.EOF {
+				break
+			} else {
+				os.Stderr.Write([]byte("Read bytes from reader failed\n"))
+				os.Exit(0)
+			}
+		}
+
+		if meeting.Originator == name {
+			list = append(list, meeting)
+		} else {
+			for _, nameStr := range strings.Split(meeting.Participants, ",") {
+				if nameStr == name {
+					list = append(list, meeting)
+					break
+				}
+			}
+		}
+	}
+	return list
 }

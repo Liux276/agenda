@@ -3,25 +3,26 @@ package entity
 import (
 	"bufio"
 	"fmt"
-	"github.com/json-iterator/go"
-	"github.com/sysu-615/agenda/models"
 	"io"
 	"log"
 	"os"
+
+	"github.com/json-iterator/go"
+	"github.com/sysu-615/agenda/models"
 )
 
-func ReadUserInfoFromFile() ([]models.User) {
+func ReadUserInfoFromFile() []models.User {
 	var list []models.User
-    file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
-    defer file.Close()
-    if err != nil {
-        panic(err)
-    }
-    var user models.User
-    reader := bufio.NewReader(file)
-    for {
-        data, errR := reader.ReadBytes('\n')
-        err = jsoniter.Unmarshal(data, &user)
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
+	defer file.Close()
+	if err != nil {
+		panic(err)
+	}
+	var user models.User
+	reader := bufio.NewReader(file)
+	for {
+		data, errR := reader.ReadBytes('\n')
+		err = jsoniter.Unmarshal(data, &user)
 		if errR != nil {
 			if errR == io.EOF {
 				break
@@ -29,7 +30,7 @@ func ReadUserInfoFromFile() ([]models.User) {
 				os.Stderr.Write([]byte("Read bytes from reader fail\n"))
 				os.Exit(0)
 			}
-        }
+		}
 		// fmt.Println(user)
 		list = append(list, user)
 	}
@@ -37,14 +38,14 @@ func ReadUserInfoFromFile() ([]models.User) {
 }
 
 func WriteUserInfoToFile(list []models.User) {
-    file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
-    defer file.Close()
-    if err != nil {
-        panic(err)
-    }
-    writer := bufio.NewWriter(file)
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
+	defer file.Close()
+	if err != nil {
+		panic(err)
+	}
+	writer := bufio.NewWriter(file)
 	var jsoniter = jsoniter.ConfigCompatibleWithStandardLibrary
-	for _, user := range list{
+	for _, user := range list {
 		// 序列化
 		data, err := jsoniter.Marshal(&user)
 		if err != nil {

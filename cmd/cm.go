@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/sysu-615/agenda/entity"
@@ -31,15 +32,41 @@ var cmCmd = &cobra.Command{
 	Short: "This command can create a meeting",
 	Long:  `You can use agenda cm to create a meeting`,
 	Run: func(cmd *cobra.Command, args []string) {
-		meetings := entity.ReadMeetingFromFile()
+		// 查看会议组织者所参与的所有会议
+		meetings := entity.FetchMeetingsByName(createdMeeting.Originator)
+		for _, meeting := range meetings {
+			if (meeting.StartTime >= createdMeeting.StartTime && meeting.StartTime < createdMeeting.EndTime) || (meeting.EndTime > createdMeeting.StartTime && meeting.EndTime <= createdMeeting.EndTime) {
+				models.Logger.Println("Failed to create meeting:", meeting.Title)
+				fmt.Println("Some meetings of the sponsor conflict with the meeting in terms of time")
+				os.Exit(0)
+			}
+		}
+
+		// 查看会议参与者所参加的所有会议
+		for _, participator := range strings.Split(createdMeeting.Participants, ",") {
+			meetings = entity.FetchMeetingsByName(participator)
+			for _, meeting := range meetings {
+				if (meeting.StartTime >= createdMeeting.StartTime && meeting.StartTime < createdMeeting.EndTime) || (meeting.EndTime > createdMeeting.StartTime && meeting.EndTime <= createdMeeting.EndTime) {
+					models.Logger.Println("Failed to create meeting:", meeting.Title)
+					fmt.Println("Some meetings of the participator(", participator, ")conflict with the meeting in terms of time")
+					os.Exit(0)
+				}
+			}
+		}
+
 		// 查找所有的会议，查看Title是否重复
+		meetings = entity.ReadMeetingFromFile()
 		for _, meeting := range meetings {
 			if meeting.Title == createdMeeting.Title {
-				models.Logger.Println("The meeting's title", meeting.Title, "has been occupied")
+				models.Logger.Println("Failed to create meeting:", meeting.Title)
 				fmt.Println("The meeting's title", meeting.Title, "has been occupied")
 				os.Exit(0)
 			}
 		}
+		models.Logger.Println("Create meeting:", createdMeeting.Title, "successfully")
+		fmt.Println("Create meeting:", createdMeeting.Title, "successfully")
+		meetings = append(meetings, createdMeeting)
+		entity.WriteMeetingToFile(meetings)
 	},
 }
 
@@ -58,7 +85,7 @@ func init() {
 
 	cmCmd.Flags().StringVarP(&createdMeeting.Title, "title", "t", "", "The Meeting's Title")
 	cmCmd.Flags().StringVarP(&createdMeeting.Originator, "originator", "o", "", "The Meeting's Originator")
-	cmCmd.Flags().StringVarP(&createdMeeting.Participants, "participants", "P", "", "The Meeting's Participants")
+	cmCmd.Flags().StringVarP(&createdMeeting.Participants, "participants", "p", "", "The Meeting's Participants")
 	cmCmd.Flags().StringVarP(&createdMeeting.StartTime, "startTime", "s", "", "The Meeting's StartTime")
-	cmCmd.Flags().StringVarP(&createdMeeting.Endtime, "endtime", "e", "", "The Meeting's Endtime")
+	cmCmd.Flags().StringVarP(&createdMeeting.EndTime, "endTime", "e", "", "The Meeting's EndTime")
 }
