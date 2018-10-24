@@ -16,6 +16,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/sysu-615/agenda/entity"
@@ -33,24 +34,32 @@ var loginCmd = &cobra.Command{
 		// fmt.Println("login called")
 		users := entity.ReadUserInfoFromFile()
 		models.Logger.SetPrefix("[agenda login]")
-		for i, userInfo := range users {
+		for _, userInfo := range users {
 			if userInfo.Login == true {
 				models.Logger.Println("Login", userInfo.Username, "has already in!")
 				fmt.Println(userInfo.Username, "has already in!")
+				os.Exit(0)
 			}
+		}
+
+		for i, userInfo := range users {
 			if userInfo.Username == loginUser.Username && userInfo.Password == loginUser.Password {
 				users[i].Login = true
+				entity.WriteUserInfoToFile(users)
 				models.Logger.Println("Login", loginUser.Username, "successfully!")
 				fmt.Println("Login successfully")
+				os.Exit(0)
 			}
 
 			if userInfo.Username == loginUser.Username && userInfo.Password != loginUser.Password {
 				models.Logger.Println("Login", loginUser.Username, "password error!")
 				fmt.Println("Password error, please check your password")
+				os.Exit(0)
 			}
 		}
-		models.Logger.Println("Login", loginUser.Username, "no such a user!")
-		fmt.Println("No such a user")
+
+		models.Logger.Println("Login", loginUser.Username, "no such an user!")
+		fmt.Println("No such an user")
 	},
 }
 

@@ -20,6 +20,23 @@
 [agenda login]2018/10/24 20:16:33 Login liuyh73 no such a user!
 [agenda login]2018/10/24 20:16:54 Login liuyh73 successfully!
 [agenda login]2018/10/24 20:16:54 Login liuyh73 no such a user!
+[agenda register]2018/10/24 20:27:54 Register a successfully!
+[agenda login]2018/10/24 20:28:24 Login a successfully!
+[agenda login]2018/10/24 20:30:27 Login a successfully!
+[agenda login]2018/10/24 20:30:52 Login liuyh73 successfully!
+[agenda login]2018/10/24 20:41:30 Login a has already in!
+[agenda login]2018/10/24 20:41:45 Login a has already in!
+[agenda logout]2018/10/24 20:42:04 a log out.
+[agenda register]2018/10/24 21:33:43 Register a successfully!
+[agenda register]2018/10/24 21:34:16 Register a successfully!
+[agenda register]2018/10/24 21:35:47 Register a successfully!
+[agenda register]2018/10/24 21:43:00 a has been registered!
+[agenda register]2018/10/24 22:07:37 Register a successfully!
+[agenda register]2018/10/24 22:08:23 Register a successfully!
+[agenda register]2018/10/24 22:08:53 a has been registered!
+[agenda register]2018/10/24 22:09:04 Register ac successfully!
+[agenda register]2018/10/24 22:10:31 Register ac successfully!
+[agenda register]2018/10/24 22:10:39 Register a successfully!
 [agenda login]2018/10/24 23:10:31 Login liuyh73 successfully!
 [agenda login]2018/10/24 23:10:31 Login liuyh73 no such a user!
 [agenda login]2018/10/24 23:12:21 Login liuyh73 successfully!
@@ -31,3 +48,11 @@
 2018/10/24 23:19:22 Failed to create meeting: svc2
 2018/10/24 23:20:04 Failed to create meeting: svc2
 2018/10/24 23:20:11 Create meeting: svc3 successfully
+
+[agenda register]2018/10/24 23:29:32 Register liuyh73 successfully!
+[agenda register]2018/10/24 23:30:01 liuyh73 has been registered!
+[agenda register]2018/10/24 23:30:05 Register liuyh74 successfully!
+[agenda register]2018/10/24 23:31:05 Register liuyh74 successfully!
+[agenda register]2018/10/24 23:31:09 Register test successfully!
+[agenda register]2018/10/24 23:33:12 Register liuyh74 successfully!
+[agenda register]2018/10/24 23:33:15 Register liuyh76 successfully!
