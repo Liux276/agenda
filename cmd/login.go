@@ -30,11 +30,11 @@ var loginCmd = &cobra.Command{
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-Run: func(cmd *cobra.Command, args []string) {
-	// fmt.Println("login called")
-	users := entity.ReadUserInfoFromFile()
-	models.Logger.SetPrefix("[agenda login]")
-	// "fmt"
+	Run: func(cmd *cobra.Command, args []string) {
+		// fmt.Println("login called")
+		users := entity.ReadUserInfoFromFile()
+		models.Logger.SetPrefix("[agenda login]")
+		// "fmt"
 		for i, userInfo := range users {
 			if userInfo.Login == true {
 				models.Logger.Println("Login", userInfo.Username, "has already in!")
@@ -42,6 +42,7 @@ Run: func(cmd *cobra.Command, args []string) {
 			}
 			if userInfo.Username == loginUser.Username && userInfo.Password == loginUser.Password {
 				user[i].Login = true
+				entity.WriteUserInfoToFile(users)
 				models.Logger.Println("Login", loginUser.Username, "successfully!")
 				fmt.Println("Login successfully")
 			}
@@ -53,8 +54,8 @@ Run: func(cmd *cobra.Command, args []string) {
 		}
 		models.Logger.Println("Login", loginUser.Username, "no such a user!")
 		fmt.Println("No such a user")
-	},
-}
+		},
+	}
 
 var loginUser models.User
 
