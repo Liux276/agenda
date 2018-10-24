@@ -27,3 +27,13 @@
 [agenda login]2018/10/24 20:41:30 Login a has already in!
 [agenda login]2018/10/24 20:41:45 Login a has already in!
 [agenda logout]2018/10/24 20:42:04 a log out.
+[agenda register]2018/10/24 21:33:43 Register a successfully!
+[agenda register]2018/10/24 21:34:16 Register a successfully!
+[agenda register]2018/10/24 21:35:47 Register a successfully!
+[agenda register]2018/10/24 21:43:00 a has been registered!
+[agenda register]2018/10/24 22:07:37 Register a successfully!
+[agenda register]2018/10/24 22:08:23 Register a successfully!
+[agenda register]2018/10/24 22:08:53 a has been registered!
+[agenda register]2018/10/24 22:09:04 Register ac successfully!
+[agenda register]2018/10/24 22:10:31 Register ac successfully!
+[agenda register]2018/10/24 22:10:39 Register a successfully!

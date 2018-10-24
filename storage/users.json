@@ -1,2 +1,4 @@
-{"Username":"liuyh73","Password":"123123","Telephone":"123123","Email":"liuy73@gmail.com","Login":false}
-{"Username":"a","Password":"b","Telephone":"c","Email":"d@qq.com","Login":false}
+[
+	{"Username":"ac","Password":"c","Telephone":"1","Email":"2@qq.com","Login":false},
+	{"Username":"a","Password":"c","Telephone":"1","Email":"2@qq.com","Login":false}
+]
