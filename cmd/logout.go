@@ -15,9 +15,11 @@
 package cmd
 
 import (
+	"github.com/sysu-615/agenda/entity"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/models"
 )
 
 // logoutCmd represents the logout command
@@ -31,7 +33,19 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("logout called")
+		models.Logger.SetPrefix("[agenda logout]")
+		users := entity.ReadUserInfoFromFile()
+
+		for i, user := range users {
+			if user.Login {
+				fmt.Println(user.Username, "log out.")
+				models.Logger.Println(user.Username, "log out.")
+				users[i].Login = false
+				entity.WriteUserInfoToFile(users)
+				return
+			}
+		}
+		fmt.Println("No user login")
 	},
 }
 

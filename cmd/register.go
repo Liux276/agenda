@@ -15,58 +15,35 @@
 package cmd
 
 import (
-	"io"
-	"encoding/json"
-	"bufio"
 	"fmt"
 	"os"
-
 	"github.com/spf13/cobra"
 	"github.com/sysu-615/agenda/models"
+	"github.com/sysu-615/agenda/entity"
 )
 
-var user models.User
+var registerUser models.User
 
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
 	Use:   "register",
 	Short: "This command can register user",
 	Long:  `You can use agenda register to sign up one user`,
-	Run: func(cmd *cobra.Command, args []string) {
-		usersReader := bufio.NewReader(models.UsersHandler)
-		userQuery := new(models.User)
-		var userBytes []byte
-		var readErr, err error
-		for {
-			userBytes, readErr = usersReader.ReadBytes(byte(','))
-			fmt.Println(userBytes)
-			if readErr == io.EOF {
-				break
-			}
-			err = json.Unmarshal(userBytes, userQuery)
-			if err != nil {
-				panic(err)
-			}
-			if user.Username == userQuery.Username {
-				fmt.Println("The username", user.Username, "has been registered")
+	Run: func(cmd *cobra.Command, args []string) {		
+		models.Logger.SetPrefix("[agenda register]")
+		users := entity.ReadUserInfoFromFile()
+		for _, user := range users {
+			if user.Username == registerUser.Username {
+				models.Logger.Println(registerUser.Username, "has been registered!")
+				fmt.Println(registerUser.Username, "has been registered!")
 				os.Exit(1)
 			}
 		}
-
-		usersWriter := bufio.NewWriter(models.UsersHandler)
-		userBytes, err = json.Marshal(user) 
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(usersWriter)
-
-		length, err := usersWriter.Write(userBytes)
-		fmt.Println(length)
-		if err != nil {
-			panic(err)
-		}
-		models.Logger.SetPrefix("[agenda register]")
-		models.Logger.Println("Register", user.Username, "successfully!")
+		registerUser.Login = false
+		users = append(users, registerUser)
+		entity.WriteUserInfoToFile(users)
+		models.Logger.Println("Register", registerUser.Username, "successfully!")
+		fmt.Println("Register", registerUser.Username, "successfully!")
 	},
 }
 
@@ -83,8 +60,8 @@ func init() {
 	// is called directly, e.g.:
 	// registerCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	
-	registerCmd.Flags().StringVarP(&user.Username, "username", "u", "", "The User's Username")
-	registerCmd.Flags().StringVarP(&user.Password, "password", "p", "", "The User's Password")
-	registerCmd.Flags().StringVarP(&user.Email, "email", "e", "", "The User's Email")
-	registerCmd.Flags().StringVarP(&user.Telephone, "telephone", "P", "", "The User's telephone")
+	registerCmd.Flags().StringVarP(&registerUser.Username, "username", "u", "", "The User's Username")
+	registerCmd.Flags().StringVarP(&registerUser.Password, "password", "p", "", "The User's Password")
+	registerCmd.Flags().StringVarP(&registerUser.Email, "email", "e", "", "The User's Email")
+	registerCmd.Flags().StringVarP(&registerUser.Telephone, "telephone", "P", "", "The User's telephone")
 }
