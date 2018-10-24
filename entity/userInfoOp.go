@@ -2,7 +2,6 @@ package entity
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -37,15 +36,14 @@ func ReadUserInfoFromFile() []models.User {
 			continue
 		}
 
-		data = data[0 : len(data)-1]
+		if data[len(data)-2] == ',' {
+			data = data[0 : len(data)-2]
+		}
 
 		err = jsoniter.Unmarshal(data, &user)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
-
-		// fmt.Println(user)
 		list = append(list, user)
 	}
 	return list
@@ -77,7 +75,7 @@ func WriteUserInfoToFile(list []models.User) {
 		}
 		writer.WriteByte('\n')
 		if errW != nil {
-			fmt.Println(errW)
+			panic(errW)
 		}
 		writer.Flush()
 	}

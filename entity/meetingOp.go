@@ -2,7 +2,6 @@ package entity
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -36,15 +35,14 @@ func ReadMeetingFromFile() []models.Meeting {
 			continue
 		}
 
-		data = data[0 : len(data)-1]
+		if data[len(data)-2] == ',' {
+			data = data[0 : len(data)-2]
+		}
 
 		err = jsoniter.Unmarshal(data, &meeting)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
-
-		// fmt.Println(user)
 		list = append(list, meeting)
 	}
 	return list
@@ -76,7 +74,7 @@ func WriteMeetingToFile(list []models.Meeting) {
 		}
 		writer.WriteByte('\n')
 		if errW != nil {
-			fmt.Println(errW)
+			panic(err)
 		}
 		writer.Flush()
 	}
@@ -108,11 +106,14 @@ func FetchMeetingsByName(name string) []models.Meeting {
 		if len(data) <= 2 {
 			continue
 		}
-		data = data[0 : len(data)-1]
+
+		if data[len(data)-2] == ',' {
+			data = data[0 : len(data)-2]
+		}
+
 		err = jsoniter.Unmarshal(data, &meeting)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
 		// 获取name所参加的所有会议
 		if meeting.Originator == name {
