@@ -16,18 +16,34 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/models"
+	"github.com/sysu-615/agenda/entity"
 )
 
-var user models.User
+var registerUser models.User
 
 // registerCmd represents the register command
 var registerCmd = &cobra.Command{
 	Use:   "register",
 	Short: "This command can register user",
 	Long:  `You can use agenda register to sign up one user`,
-	Run: func(cmd *cobra.Command, args []string) {
-		
+	Run: func(cmd *cobra.Command, args []string) {		
+		models.Logger.SetPrefix("[agenda register]")
+		users := entity.ReadUserInfoFromFile()
+		for _, user := range users {
+			if user.Username == registerUser.Username {
+				models.Logger.Println(registerUser.Username, "has been registered!")
+				fmt.Println(registerUser.Username, "has been registered!")
+				os.Exit(1)
+			}
+		}
+		registerUser.Login = false
+		users = append(users, registerUser)
+		entity.WriteUserInfoToFile(users)
+		models.Logger.Println("Register", registerUser.Username, "successfully!")
+		fmt.Println("Register", registerUser.Username, "successfully!")
 	},
 }
 
@@ -43,4 +59,9 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// registerCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	
+	registerCmd.Flags().StringVarP(&registerUser.Username, "username", "u", "", "The User's Username")
+	registerCmd.Flags().StringVarP(&registerUser.Password, "password", "p", "", "The User's Password")
+	registerCmd.Flags().StringVarP(&registerUser.Email, "email", "e", "", "The User's Email")
+	registerCmd.Flags().StringVarP(&registerUser.Telephone, "telephone", "P", "", "The User's telephone")
 }
