@@ -15,9 +15,14 @@
 package cmd
 
 import (
+	"io"
+	"encoding/json"
+	"bufio"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/models"
 )
 
 var user models.User
@@ -28,7 +33,40 @@ var registerCmd = &cobra.Command{
 	Short: "This command can register user",
 	Long:  `You can use agenda register to sign up one user`,
 	Run: func(cmd *cobra.Command, args []string) {
-		
+		usersReader := bufio.NewReader(models.UsersHandler)
+		userQuery := new(models.User)
+		var userBytes []byte
+		var readErr, err error
+		for {
+			userBytes, readErr = usersReader.ReadBytes(byte(','))
+			fmt.Println(userBytes)
+			if readErr == io.EOF {
+				break
+			}
+			err = json.Unmarshal(userBytes, userQuery)
+			if err != nil {
+				panic(err)
+			}
+			if user.Username == userQuery.Username {
+				fmt.Println("The username", user.Username, "has been registered")
+				os.Exit(1)
+			}
+		}
+
+		usersWriter := bufio.NewWriter(models.UsersHandler)
+		userBytes, err = json.Marshal(user) 
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(usersWriter)
+
+		length, err := usersWriter.Write(userBytes)
+		fmt.Println(length)
+		if err != nil {
+			panic(err)
+		}
+		models.Logger.SetPrefix("[agenda register]")
+		models.Logger.Println("Register", user.Username, "successfully!")
 	},
 }
 
@@ -44,4 +82,9 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// registerCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	
+	registerCmd.Flags().StringVarP(&user.Username, "username", "u", "", "The User's Username")
+	registerCmd.Flags().StringVarP(&user.Password, "password", "p", "", "The User's Password")
+	registerCmd.Flags().StringVarP(&user.Email, "email", "e", "", "The User's Email")
+	registerCmd.Flags().StringVarP(&user.Telephone, "telephone", "P", "", "The User's telephone")
 }
