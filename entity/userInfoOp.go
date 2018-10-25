@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-
 	"github.com/json-iterator/go"
 	"github.com/sysu-615/agenda/models"
 )
@@ -43,8 +42,7 @@ func ReadUserInfoFromFile() []models.User {
 
 		err = jsoniter.Unmarshal(data, &user)
 		if err != nil {
-			// fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
 
 		// fmt.Println(user)
@@ -54,7 +52,7 @@ func ReadUserInfoFromFile() []models.User {
 }
 
 func WriteUserInfoToFile(list []models.User) {
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	defer file.Close()
 
 	if err != nil {
@@ -155,4 +153,17 @@ func IsUser(name string) bool {
 		}
 	}
 	return false
+}
+
+func RemoveUser(name string) {
+	users := ReadUserInfoFromFile()
+	for i, user := range users {
+		if user.Username == name {
+			// tips: 如果将一个slice追加到另一个slice中需要带上"..."
+			users = append(users[:i], users[i+1:]...)
+			break
+		}
+	}
+
+	WriteUserInfoToFile(users)
 }

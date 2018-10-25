@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [agenda register]2018/10/24 17:23:13 Register liuyh73 successfully!
 [agenda register]2018/10/24 17:24:07 Register liuyh73 successfully!
 [agenda register]2018/10/24 17:27:07 Register liuyh73 successfully!
@@ -169,3 +170,12 @@
 [agenda mtclear]2018/10/25 21:22:06 Cancel meetings success of user: lx
 [agenda mtclear]2018/10/25 21:22:17 Cancel meetings success of user: lx
 [agenda mtclear]2018/10/25 21:23:23 Cancel meetings success of user: lx
+=======
+[agenda register]2018/10/25 21:33:47 Register b successfully!
+[agenda register]2018/10/25 21:33:49 b has been registered!
+[agenda register]2018/10/25 21:33:52 Register v successfully!
+[agenda logout]2018/10/25 21:34:21 b log out
+[agenda login]2018/10/25 21:34:24 Login v successfully!
+[agenda register]2018/10/25 21:36:27 Register v successfully!
+[agenda register]2018/10/25 21:36:33 Register c successfully!
+>>>>>>> f46279a44dda3d4d568939a28bc899e85eff674f

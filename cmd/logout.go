@@ -16,7 +16,6 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/sysu-615/agenda/entity"
 	"github.com/sysu-615/agenda/models"
