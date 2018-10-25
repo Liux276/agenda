@@ -32,7 +32,7 @@ var ruCmd = &cobra.Command{
 		if isLoggedIn == true {
 			// delete login info
 			entity.ClearCurUserInfo()
-			
+
 			// delete user info
 			entity.RemoveUser(user.Username)
 
@@ -45,12 +45,12 @@ var ruCmd = &cobra.Command{
 				} else {
 					newMeeting := entity.RemoveParticipantsByName(user.Username, meeting)
 					if len(newMeeting.Participants) != 0 {
-						newMeetings = append(newMeetings, meeting)
+						newMeetings = append(newMeetings, newMeeting)
 					}
 				}
 			}
 			entity.WriteMeetingToFile(newMeetings)
-
+			models.Logger.Println(user.Username, "clear account")
 			fmt.Println("Remove user ["+ user.Username + "] successfully")
 		} else {
 			fmt.Println("Please login first")
