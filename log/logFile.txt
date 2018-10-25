@@ -166,3 +166,6 @@
 [agenda mtcancel]2018/10/25 21:02:15 Cancel meeting success:  first
 [agenda mtcancel]2018/10/25 21:03:17 Cancel meeting success:  first
 [agenda mtcancel]2018/10/25 21:05:02 Cancel meeting success:  first
+[agenda mtclear]2018/10/25 21:22:06 Cancel meetings success of user: lx
+[agenda mtclear]2018/10/25 21:22:17 Cancel meetings success of user: lx
+[agenda mtclear]2018/10/25 21:23:23 Cancel meetings success of user: lx

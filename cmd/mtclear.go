@@ -16,8 +16,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/entity"
+	"github.com/sysu-615/agenda/models"
 )
 
 // mtclearCmd represents the mtclear command
@@ -31,7 +34,29 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("mtclear called")
+		fmt.Println("mtcancel called")
+		login, loggedUser := entity.IsLoggedIn()
+		// 是否已经登录
+		if !login {
+			fmt.Println("Please sign in before cancle a meeting")
+			os.Exit(0)
+		}
+		models.Logger.SetPrefix("[agenda mtclear]")
+
+		//清除所有该用户为发起人的会议
+		meetings := entity.ReadMeetingFromFile()
+		newMeetingRecord := make([]models.Meeting, 0)
+
+		for _, meeting := range meetings {
+			//如果该用户不为发起人，则不清除
+			if meeting.Originator != loggedUser.Username {
+				newMeetingRecord = append(newMeetingRecord, meeting)
+			}
+		}
+		entity.WriteMeetingToFile(newMeetingRecord)
+		fmt.Println("All meetings of user", loggedUser.Username, "are cancelled!")
+		models.Logger.Println("Cancel meetings success of user:", loggedUser.Username)
+		os.Exit(0)
 	},
 }
 
