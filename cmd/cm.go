@@ -32,12 +32,32 @@ var cmCmd = &cobra.Command{
 	Short: "This command can create a meeting",
 	Long:  `You can use agenda cm to create a meeting`,
 	Run: func(cmd *cobra.Command, args []string) {
+		// 是否已经登录
+		if login, _ := entity.IsLoggedIn(); !login {
+			fmt.Println("Please sign in before create a meeting")
+			os.Exit(0)
+		}
+
+		// 判断会议组织者是否是agenda用户
+		if !entity.IsUser(createdMeeting.Originator) {
+			models.Logger.Println("Failed to create meeting:", createdMeeting.Title)
+			fmt.Println("The sponsor", createdMeeting.Originator, "has not yet registered")
+			os.Exit(0)
+		}
+		// 判断会议参与者是否是agenda用户
+		for _, participator := range strings.Split(createdMeeting.Participants, ",") {
+			if !entity.IsUser(participator) {
+				models.Logger.Println("Failed to create meeting:", createdMeeting.Title)
+				fmt.Println("The participator", participator, "has not yet registered")
+				os.Exit(0)
+			}
+		}
 		// 查看会议组织者所参与的所有会议
 		meetings := entity.FetchMeetingsByName(createdMeeting.Originator)
 		for _, meeting := range meetings {
 			if (meeting.StartTime >= createdMeeting.StartTime && meeting.StartTime < createdMeeting.EndTime) || (meeting.EndTime > createdMeeting.StartTime && meeting.EndTime <= createdMeeting.EndTime) {
-				models.Logger.Println("Failed to create meeting:", meeting.Title)
-				fmt.Println("Some meetings of the sponsor conflict with the meeting in terms of time")
+				models.Logger.Println("Failed to create meeting:", createdMeeting.Title)
+				fmt.Println("Some meetings of the sponsor(", createdMeeting.Originator, ")conflict with the meeting in terms of time")
 				os.Exit(0)
 			}
 		}
@@ -47,7 +67,7 @@ var cmCmd = &cobra.Command{
 			meetings = entity.FetchMeetingsByName(participator)
 			for _, meeting := range meetings {
 				if (meeting.StartTime >= createdMeeting.StartTime && meeting.StartTime < createdMeeting.EndTime) || (meeting.EndTime > createdMeeting.StartTime && meeting.EndTime <= createdMeeting.EndTime) {
-					models.Logger.Println("Failed to create meeting:", meeting.Title)
+					models.Logger.Println("Failed to create meeting:", createdMeeting.Title)
 					fmt.Println("Some meetings of the participator(", participator, ")conflict with the meeting in terms of time")
 					os.Exit(0)
 				}
@@ -58,7 +78,7 @@ var cmCmd = &cobra.Command{
 		meetings = entity.ReadMeetingFromFile()
 		for _, meeting := range meetings {
 			if meeting.Title == createdMeeting.Title {
-				models.Logger.Println("Failed to create meeting:", meeting.Title)
+				models.Logger.Println("Failed to create meeting:", createdMeeting.Title)
 				fmt.Println("The meeting's title", meeting.Title, "has been occupied")
 				os.Exit(0)
 			}

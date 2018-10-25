@@ -3,24 +3,25 @@ package entity
 import (
 	"bufio"
 	"fmt"
-	"github.com/json-iterator/go"
-	"github.com/sysu-615/agenda/models"
 	"io"
 	"log"
 	"os"
+
+	"github.com/json-iterator/go"
+	"github.com/sysu-615/agenda/models"
 )
 
-func ReadUserInfoFromFile() ([]models.User) {
+func ReadUserInfoFromFile() []models.User {
 	var list []models.User
-    file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
-	
-    if err != nil {
-        panic(err)
-    }
-    var user models.User
-    reader := bufio.NewReader(file)
-    for {
+
+	if err != nil {
+		panic(err)
+	}
+	var user models.User
+	reader := bufio.NewReader(file)
+	for {
 		data, errR := reader.ReadBytes('\n')
 		if errR != nil {
 			if errR == io.EOF {
@@ -30,22 +31,22 @@ func ReadUserInfoFromFile() ([]models.User) {
 				os.Exit(0)
 			}
 		}
-		
+
 		// 过滤'['、']'
 		if data[0] == ']' || data[0] == '[' {
 			continue
-		} 
+		}
 
 		if data[len(data)-2] == ',' {
-			data = data[0:len(data)-2]
+			data = data[0 : len(data)-2]
 		}
-		
+
 		err = jsoniter.Unmarshal(data, &user)
 		if err != nil {
 			// fmt.Println(err)
 			os.Exit(1)
 		}
-		
+
 		// fmt.Println(user)
 		list = append(list, user)
 	}
@@ -53,19 +54,19 @@ func ReadUserInfoFromFile() ([]models.User) {
 }
 
 func WriteUserInfoToFile(list []models.User) {
-    file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
-	
-    if err != nil {
-        panic(err)
+
+	if err != nil {
+		panic(err)
 	}
-	
-    writer := bufio.NewWriter(file)
+
+	writer := bufio.NewWriter(file)
 	var jsoniter = jsoniter.ConfigCompatibleWithStandardLibrary
 
 	writer.WriteByte('[')
 	writer.WriteByte('\n')
-	for i, user := range list{
+	for i, user := range list {
 		// 序列化
 		data, err := jsoniter.Marshal(&user)
 		if err != nil {
@@ -73,9 +74,9 @@ func WriteUserInfoToFile(list []models.User) {
 		}
 		writer.WriteByte('\t')
 		_, errW := writer.Write([]byte(string(data)))
-		if i != len(list) - 1 {
+		if i != len(list)-1 {
 			writer.WriteByte(',')
-		} 
+		}
 		writer.WriteByte('\n')
 		if errW != nil {
 			fmt.Println(errW)
@@ -90,11 +91,11 @@ func WriteUserInfoToFile(list []models.User) {
 func SaveCurUserInfo(loginUser models.User) {
 	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
-	
-    if err != nil {
-        panic(err)
+
+	if err != nil {
+		panic(err)
 	}
-	
+
 	writer := bufio.NewWriter(file)
 	// 序列化
 	data, err := jsoniter.Marshal(&loginUser)
@@ -109,8 +110,8 @@ func SaveCurUserInfo(loginUser models.User) {
 	writer.Flush()
 }
 
-func ClearCurUserInfo() {	
-    err := os.Truncate("github.com/sysu-615/agenda/storage/curUser.txt", 0)
+func ClearCurUserInfo() {
+	err := os.Truncate("github.com/sysu-615/agenda/storage/curUser.txt", 0)
 	if err != nil {
 		panic(err)
 	}
@@ -119,14 +120,14 @@ func ClearCurUserInfo() {
 func IsLoggedIn() (bool, models.User) {
 	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
-	
-    if err != nil {
-        panic(err)
+
+	if err != nil {
+		panic(err)
 	}
 	var user models.User
-    // writer := bufio.NewWriter(file)
+	// writer := bufio.NewWriter(file)
 	// var jsoniter = jsoniter.ConfigCompatibleWithStandardLibrary
-    reader := bufio.NewReader(file)
+	reader := bufio.NewReader(file)
 	data, errR := reader.ReadBytes('\n')
 	if errR != nil {
 		if errR == io.EOF {
@@ -144,4 +145,14 @@ func IsLoggedIn() (bool, models.User) {
 		}
 	}
 	return true, user
+}
+
+func IsUser(name string) bool {
+	users := ReadUserInfoFromFile()
+	for _, user := range users {
+		if user.Username == name {
+			return true
+		}
+	}
+	return false
 }
