@@ -32,6 +32,15 @@ var registerCmd = &cobra.Command{
 	Long:  `You can use agenda register to sign up one user`,
 	Run: func(cmd *cobra.Command, args []string) {
 		models.Logger.SetPrefix("[agenda register]")
+		if registerUser.Username == "" {
+			fmt.Println("The username will be required")
+			os.Exit(0)
+		}
+
+		if registerUser.Password == "" {
+			fmt.Println("The password will be required")
+			os.Exit(0)
+		}
 		users := entity.ReadUserInfoFromFile()
 		for _, user := range users {
 			if user.Username == registerUser.Username {
