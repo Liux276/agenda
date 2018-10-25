@@ -37,6 +37,29 @@ var cmCmd = &cobra.Command{
 			fmt.Println("Please sign in before create a meeting")
 			os.Exit(0)
 		}
+		models.Logger.SetPrefix("[agenda cm]")
+
+		// 检查信息是否完整
+		if createdMeeting.Title == "" {
+			fmt.Println("The meeting's title will be required")
+			os.Exit(0)
+		}
+		if createdMeeting.Originator == "" {
+			fmt.Println("The meeting's sponsor will be required")
+			os.Exit(0)
+		}
+		if createdMeeting.Participants == "" {
+			fmt.Println("The meeting's participants will be required")
+			os.Exit(0)
+		}
+		if createdMeeting.StartTime == "" {
+			fmt.Println("The meeting's startTime will be required")
+			os.Exit(0)
+		}
+		if createdMeeting.EndTime == "" {
+			fmt.Println("The meeting's endTime will be required")
+			os.Exit(0)
+		}
 
 		// 判断会议组织者是否是agenda用户
 		if !entity.IsUser(createdMeeting.Originator) {
