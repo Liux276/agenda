@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-
 	"github.com/json-iterator/go"
 	"github.com/sysu-615/agenda/models"
 )
@@ -43,8 +42,7 @@ func ReadUserInfoFromFile() []models.User {
 
 		err = jsoniter.Unmarshal(data, &user)
 		if err != nil {
-			// fmt.Println(err)
-			os.Exit(1)
+			panic(err)
 		}
 
 		// fmt.Println(user)

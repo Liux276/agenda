@@ -17,7 +17,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"github.com/spf13/cobra"
 	"github.com/sysu-615/agenda/entity"
 	"github.com/sysu-615/agenda/models"
@@ -37,7 +36,6 @@ var loginCmd = &cobra.Command{
 
 		// 判断是否已经登陆过
 		isLoggedIn, user := entity.IsLoggedIn()
-		fmt.Println(isLoggedIn)
 		if isLoggedIn == true {
 			// 已经登陆
 			fmt.Println(user.Username + " has already in")
