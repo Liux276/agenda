@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"fmt"
 	"strings"
 	"github.com/json-iterator/go"
 	"github.com/sysu-615/agenda/models"
@@ -12,7 +13,7 @@ import (
 
 func ReadMeetingFromFile() []models.Meeting {
 	var list []models.Meeting
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meetings.json", os.O_RDONLY, 0644)
+	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meetings.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -127,4 +128,21 @@ func FetchMeetingsByName(name string) []models.Meeting {
 		}
 	}
 	return list
+}
+
+func RemoveParticipantsByName(name string, meeting models.Meeting) models.Meeting {
+	// judge whether the user is in the meeting
+	flag := false
+	var newPar []string
+	for _, nameStr := range strings.Split(meeting.Participants, ",") {
+		if nameStr != name {
+			newPar = append(newPar, nameStr)
+		} else {
+			flag = true
+		}
+	}
+	if flag == true {
+		meeting.Participants = strings.Replace(strings.Trim(fmt.Sprint(newPar), "[]"), " ", ",", -1)
+	}
+	return meeting
 }
