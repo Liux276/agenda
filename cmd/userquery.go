@@ -16,16 +16,17 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/sysu-615/agenda/entity"	
-	"github.com/sysu-615/agenda/models"
+
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/entity"
+	"github.com/sysu-615/agenda/models"
 )
 
 // userqueryCmd represents the userquery command
 var userqueryCmd = &cobra.Command{
 	Use:   "userquery",
-	Short: "This command can get query all user information only for logged in users",
-	Long: `You can use agenda userquery to create a meeting`,
+	Short: "This command can query all user information only for logged in users",
+	Long:  `You can use agenda userquery to get all user information only for logged in users`,
 	Run: func(cmd *cobra.Command, args []string) {
 		models.Logger.SetPrefix("[agenda userquery]")
 		isLoggedIn, user := entity.IsLoggedIn()
@@ -54,6 +55,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// userqueryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 
 }
