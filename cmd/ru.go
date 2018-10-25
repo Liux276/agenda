@@ -30,11 +30,28 @@ var ruCmd = &cobra.Command{
 		models.Logger.SetPrefix("[agenda remove user]")
 		isLoggedIn, user := entity.IsLoggedIn()
 		if isLoggedIn == true {
+			// delete login info
+			entity.ClearCurUserInfo()
+			
 			// delete user info
 			entity.RemoveUser(user.Username)
 
 			// delete user meeting
-			// meetings := 
+			var newMeetings []models.Meeting
+			meetings := entity.ReadMeetingFromFile()
+			for _, meeting := range meetings {
+				if meeting.Originator == user.Username {
+					continue;
+				} else {
+					newMeeting := entity.RemoveParticipantsByName(user.Username, meeting)
+					if len(newMeeting.Participants) != 0 {
+						newMeetings = append(newMeetings, meeting)
+					}
+				}
+			}
+			entity.WriteMeetingToFile(newMeetings)
+
+			fmt.Println("Remove user ["+ user.Username + "] successfully")
 		} else {
 			fmt.Println("Please login first")
 		}
