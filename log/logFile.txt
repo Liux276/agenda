@@ -18,3 +18,14 @@
 [agenda register]2018/10/24 20:15:55 liuyh73 has been registered!
 [agenda login]2018/10/24 20:16:33 Login liuyh73 password error!
 
+[agenda login]2018/10/25 23:25:27 Login lx successfully!
+[agenda cm]2018/10/25 23:28:08 Create meeting: first successfully
+[agenda cm]2018/10/25 23:28:26 Failed to create meeting: first
+[agenda cm]2018/10/25 23:28:36 Failed to create meeting: first
+[agenda cm]2018/10/25 23:29:13 Create meeting: second successfully
+[agenda mtcancel]2018/10/25 23:29:17 Cancel meeting success:  first
+[agenda mtclear]2018/10/25 23:29:27 Cancel meetings success of user: lx
+[agenda cm]2018/10/25 23:29:32 Create meeting: first successfully
+[agenda cm]2018/10/25 23:29:37 Failed to create meeting: second
+[agenda cm]2018/10/25 23:29:48 Create meeting: second successfully
+[agenda mtclear]2018/10/25 23:29:51 Cancel meetings success of user: lx

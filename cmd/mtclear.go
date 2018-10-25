@@ -26,13 +26,8 @@ import (
 // mtclearCmd represents the mtclear command
 var mtclearCmd = &cobra.Command{
 	Use:   "mtclear",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Use mtclear to Cancle all the meetings you have created",
+	Long:  `Use mtclear to Cancle all the meetings you have created [agenda mtclear]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("mtcancel called")
 		login, loggedUser := entity.IsLoggedIn()
