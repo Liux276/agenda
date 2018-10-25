@@ -16,22 +16,28 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/entity"
+	"github.com/sysu-615/agenda/models"
 )
 
 // ruCmd represents the ru command
 var ruCmd = &cobra.Command{
 	Use:   "ru",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "This command is used to clear the account for the user who has logged in.",
+	Long: `You can use agenda ru to Clear your account information [use with caution]`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ru called")
+		models.Logger.SetPrefix("[agenda remove user]")
+		isLoggedIn, user := entity.IsLoggedIn()
+		if isLoggedIn == true {
+			// delete user info
+			entity.RemoveUser(user.Username)
+
+			// delete user meeting
+			// meetings := 
+		} else {
+			fmt.Println("Please login first")
+		}
 	},
 }
 

@@ -37,6 +37,7 @@ var loginCmd = &cobra.Command{
 
 		// 判断是否已经登陆过
 		isLoggedIn, user := entity.IsLoggedIn()
+		fmt.Println(isLoggedIn)
 		if isLoggedIn == true {
 			// 已经登陆
 			fmt.Println(user.Username + " has already in")
