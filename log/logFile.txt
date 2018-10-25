@@ -1,7 +1,0 @@
-[agenda register]2018/10/25 21:33:47 Register b successfully!
-[agenda register]2018/10/25 21:33:49 b has been registered!
-[agenda register]2018/10/25 21:33:52 Register v successfully!
-[agenda logout]2018/10/25 21:34:21 b log out
-[agenda login]2018/10/25 21:34:24 Login v successfully!
-[agenda register]2018/10/25 21:36:27 Register v successfully!
-[agenda register]2018/10/25 21:36:33 Register c successfully!
