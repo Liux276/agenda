@@ -135,3 +135,34 @@
 [agenda userquery]2018/10/25 11:29:30 UserQuery 0 query all users infomation!
 [agenda register]2018/10/25 11:29:59 0 has been registered!
 [agenda userquery]2018/10/25 11:30:01 UserQuery 0 query all users infomation!
+[agenda login]2018/10/25 17:44:18 Login  no such an user!
+[agenda register]2018/10/25 17:44:46 Register lx successfully!
+[agenda login]2018/10/25 17:44:58 Login lx successfully!
+[agenda cm]2018/10/25 17:51:27 Failed to create meeting: first
+[agenda cm]2018/10/25 17:52:26 Create meeting: first successfully
+[agenda cm]2018/10/25 20:37:10 Failed to create meeting: first
+[agenda cm]2018/10/25 20:37:26 Create meeting: second successfully
+[agenda mtcancel]2018/10/25 20:42:32 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:42:32 Failed to delete meeting: first
+[agenda mtcancel]2018/10/25 20:43:44 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:43:44 Failed to delete meeting: first
+[agenda mtcancel]2018/10/25 20:44:07 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:44:07 Failed to delete meeting: first
+[agenda mtcancel]2018/10/25 20:44:23 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:44:23 Failed to delete meeting: first
+[agenda cm]2018/10/25 20:44:53 Failed to create meeting: first
+[agenda mtcancel]2018/10/25 20:46:13 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:46:13 Failed to delete meeting: first
+[agenda mtcancel]2018/10/25 20:46:52 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:46:52 Failed to delete meeting: first
+[agenda mtcancel]2018/10/25 20:47:25 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:47:25 Failed to delete meeting: first
+[agenda mtcancel]2018/10/25 20:49:28 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:50:22 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:54:49 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:58:04 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:58:30 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 20:59:10 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 21:02:15 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 21:03:17 Cancel meeting success:  first
+[agenda mtcancel]2018/10/25 21:05:02 Cancel meeting success:  first
