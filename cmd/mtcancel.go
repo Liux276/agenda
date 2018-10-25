@@ -58,9 +58,7 @@ var mtcancelCmd = &cobra.Command{
 					for j := i + 1; j < len(meetings); j++ {
 						newMeetingRecord = append(newMeetingRecord, meetings[j])
 					}
-					for _, x := range newMeetingRecord {
-						fmt.Println(x)
-					}
+
 					entity.WriteMeetingToFile(newMeetingRecord)
 					fmt.Println("the meeting", meetingTitle, "are cancelled!")
 					models.Logger.Println("Cancel meeting success: ", meetingTitle)
