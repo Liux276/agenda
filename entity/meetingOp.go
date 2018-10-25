@@ -103,7 +103,7 @@ func FetchMeetingsByName(name string) []models.Meeting {
 			}
 		}
 		// 过滤'['、']'
-		if len(data) <= 2 {
+		if data[0] == ']' || data[0] == '[' {
 			continue
 		}
 

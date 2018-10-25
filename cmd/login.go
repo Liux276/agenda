@@ -34,18 +34,20 @@ var loginCmd = &cobra.Command{
 		// fmt.Println("login called")
 		users := entity.ReadUserInfoFromFile()
 		models.Logger.SetPrefix("[agenda login]")
-		for _, userInfo := range users {
-			if userInfo.Login == true {
-				models.Logger.Println("Login", userInfo.Username, "has already in!")
-				fmt.Println(userInfo.Username, "has already in!")
-				os.Exit(0)
-			}
+
+		// 判断是否已经登陆过
+		isLoggedIn, user := entity.IsLoggedIn()
+		if isLoggedIn == true {
+			// 已经登陆
+			fmt.Println(user.Username + " has already in")
+			os.Exit(0)
 		}
 
-		for i, userInfo := range users {
+		for _, userInfo := range users {
 			if userInfo.Username == loginUser.Username && userInfo.Password == loginUser.Password {
-				users[i].Login = true
-				entity.WriteUserInfoToFile(users)
+				// users[i].Login = true
+				// entity.WriteUserInfoToFile(users)
+				entity.SaveCurUserInfo(userInfo)
 				models.Logger.Println("Login", loginUser.Username, "successfully!")
 				fmt.Println("Login successfully")
 				os.Exit(0)

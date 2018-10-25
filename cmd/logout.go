@@ -29,18 +29,27 @@ var logoutCmd = &cobra.Command{
 	Long:  `You can use agenda logout to logout user`,
 	Run: func(cmd *cobra.Command, args []string) {
 		models.Logger.SetPrefix("[agenda logout]")
-		users := entity.ReadUserInfoFromFile()
 
-		for i, user := range users {
-			if user.Login {
-				fmt.Println(user.Username, "log out.")
-				models.Logger.Println(user.Username, "log out.")
-				users[i].Login = false
-				entity.WriteUserInfoToFile(users)
-				return
-			}
+		isLoggedIn, user := entity.IsLoggedIn()
+		if isLoggedIn == true {
+			entity.ClearCurUserInfo()
+			fmt.Println(user.Username, "log out")
+			models.Logger.Println(user.Username, "log out")
+		} else {
+			fmt.Println("No user login")
 		}
-		fmt.Println("No user login")
+		// users := entity.ReadUserInfoFromFile()
+
+		// for i, user := range users {
+		// 	if user.Login {
+		// 		fmt.Println(user.Username, "log out.")
+		// 		models.Logger.Println(user.Username, "log out.")
+		// 		users[i].Login = false
+		// 		entity.WriteUserInfoToFile(users)
+		// 		return
+		// 	}
+		// }
+		// fmt.Println("No user login")
 	},
 }
 

@@ -5,5 +5,4 @@ type User struct {
 	Password string
 	Telephone string
 	Email string
-	Login bool
 }

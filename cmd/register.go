@@ -33,7 +33,6 @@ var registerCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		models.Logger.SetPrefix("[agenda register]")
 		users := entity.ReadUserInfoFromFile()
-		fmt.Println(users)
 		for _, user := range users {
 			if user.Username == registerUser.Username {
 				models.Logger.Println(registerUser.Username, "has been registered!")
@@ -41,7 +40,6 @@ var registerCmd = &cobra.Command{
 				os.Exit(0)
 			}
 		}
-		registerUser.Login = false
 		users = append(users, registerUser)
 		entity.WriteUserInfoToFile(users)
 		models.Logger.Println("Register", registerUser.Username, "successfully!")
