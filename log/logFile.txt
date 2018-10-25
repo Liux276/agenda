@@ -108,3 +108,30 @@
 [agenda register]2018/10/25 11:00:48 Register 99 successfully!
 [agenda login]2018/10/25 11:00:59 Login 99 successfully!
 [agenda logout]2018/10/25 11:01:12 99 log out
+[agenda login]2018/10/25 11:12:46 Login 0 no such an user!
+[agenda register]2018/10/25 11:12:57 Register 0 successfully!
+[agenda login]2018/10/25 11:13:07 Login 0 successfully!
+[agenda userquery]2018/10/25 11:13:25 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:18:52 0 has been registered!
+[agenda userquery]2018/10/25 11:19:03 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:19:56 Register liuyt successfully!
+[agenda userquery]2018/10/25 11:19:58 UserQuery 0 query all users infomation!
+[agenda userquery]2018/10/25 11:20:35 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:21:11 0 has been registered!
+[agenda userquery]2018/10/25 11:21:20 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:21:53 Register 0111 successfully!
+[agenda userquery]2018/10/25 11:21:55 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:22:07 0 has been registered!
+[agenda userquery]2018/10/25 11:22:09 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:22:23 Register 91 successfully!
+[agenda userquery]2018/10/25 11:22:25 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:26:58 0 has been registered!
+[agenda userquery]2018/10/25 11:27:00 UserQuery 0 query all users infomation!
+[agenda userquery]2018/10/25 11:27:28 UserQuery 0 query all users infomation!
+[agenda userquery]2018/10/25 11:28:09 UserQuery 0 query all users infomation!
+[agenda userquery]2018/10/25 11:28:28 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:28:54 91 has been registered!
+[agenda userquery]2018/10/25 11:29:04 UserQuery 0 query all users infomation!
+[agenda userquery]2018/10/25 11:29:30 UserQuery 0 query all users infomation!
+[agenda register]2018/10/25 11:29:59 0 has been registered!
+[agenda userquery]2018/10/25 11:30:01 UserQuery 0 query all users infomation!

@@ -16,7 +16,8 @@ package cmd
 
 import (
 	"fmt"
-
+	"github.com/sysu-615/agenda/entity"	
+	"github.com/sysu-615/agenda/models"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +27,18 @@ var userqueryCmd = &cobra.Command{
 	Short: "This command can get query all user information only for logged in users",
 	Long: `You can use agenda userquery to create a meeting`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("userquery called")
+		models.Logger.SetPrefix("[agenda userquery]")
+		isLoggedIn, user := entity.IsLoggedIn()
+		if isLoggedIn == true {
+			models.Logger.Println("UserQuery", user.Username, "query all users infomation!")
+			users := entity.ReadUserInfoFromFile()
+			fmt.Println("Name\tPhone\t\tEmail")
+			for _, userInfo := range users {
+				fmt.Printf("%-8s%-16s%s\n", userInfo.Username, userInfo.Telephone, userInfo.Email)
+			}
+		} else {
+			fmt.Println("Please login")
+		}
 	},
 }
 
@@ -43,5 +55,5 @@ func init() {
 	// is called directly, e.g.:
 	// userqueryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	
+
 }
