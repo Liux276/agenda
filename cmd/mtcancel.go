@@ -55,10 +55,7 @@ var mtcancelCmd = &cobra.Command{
 					os.Exit(0)
 				} else {
 					//将该会议删除
-					newMeetingRecord := make([]models.Meeting, 0)
-					if i-1 >= 0 {
-						newMeetingRecord = meetings[:i-1]
-					}
+					newMeetingRecord := meetings[:i]
 					for j := i + 1; j < len(meetings); j++ {
 						newMeetingRecord = append(newMeetingRecord, meetings[j])
 					}

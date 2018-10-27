@@ -58,7 +58,7 @@ var mtqueryCmd = &cobra.Command{
 		if len(queryedMeetings) == 0 {
 			//查找失败
 			models.Logger.Println("Failed to find the meeting between:", queryStartTime, queryEndTime)
-			fmt.Println("Failed to find the meeting between:", queryStartTime, queryEndTime)
+			fmt.Println("Failed to find the meetings. You have no meetings between", queryStartTime, queryEndTime)
 		} else {
 			models.Logger.Println("Success to find the meeting between:", queryStartTime, queryEndTime)
 			fmt.Println("Success to find the meeting between:", queryStartTime, queryEndTime)
