@@ -28,7 +28,7 @@ var meetingTitle string
 // mtcancelCmd represents the mtcancel command
 var mtcancelCmd = &cobra.Command{
 	Use:   "mtcancel",
-	Short: "Cancel a meeting by meeting Title",
+	Short: "Use mtcancel to cancel a meeting by meeting's Title",
 	Long:  `If you are the creater of the meeting, you can cancel the meeting by the Title of the meeting.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("mtcancel called")
