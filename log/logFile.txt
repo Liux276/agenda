@@ -29,3 +29,13 @@
 [agenda cm]2018/10/25 23:29:37 Failed to create meeting: second
 [agenda cm]2018/10/25 23:29:48 Create meeting: second successfully
 [agenda mtclear]2018/10/25 23:29:51 Cancel meetings success of user: lx
+[agenda userquery]2018/10/27 16:18:01 UserQuery lx query all users infomation!
+[agenda mtcancel]2018/10/27 16:20:09 Failed to delete meeting: first
+[agenda cm]2018/10/27 16:46:18 Create meeting: first successfully
+[agenda cm]2018/10/27 16:46:35 Create meeting: second successfully
+[agenda mtquery]2018/10/27 16:47:03 Success to find the meeting between: 2018/02/14 2018/02/18
+[agenda mtquery]2018/10/27 16:47:36 Success to find the meeting between: 2018/02/14 2018/02/18
+[agenda mtcancel]2018/10/27 16:51:34 Cancel meeting success:  first
+[agenda mtquery]2018/10/27 16:51:37 Success to find the meeting between: 2018/02/14 2018/02/18
+[agenda mtquery]2018/10/27 16:52:00 Failed to find the meeting between:  
+[agenda mtquery]2018/10/27 16:52:40 Success to find the meeting between: 2018/02/14 2018/02/18

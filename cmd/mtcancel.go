@@ -39,7 +39,11 @@ var mtcancelCmd = &cobra.Command{
 			os.Exit(0)
 		}
 		models.Logger.SetPrefix("[agenda mtcancel]")
-
+		//检查输入的会议名称
+		if meetingTitle == "" {
+			fmt.Println("The meeting's title cann't be empty! Please enter the title of the meeting you want to cancel.")
+			os.Exit(0)
+		}
 		//检查会议是否存在
 		meetings := entity.ReadMeetingFromFile()
 		for i, meeting := range meetings {

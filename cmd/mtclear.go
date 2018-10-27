@@ -33,7 +33,7 @@ var mtclearCmd = &cobra.Command{
 		login, loggedUser := entity.IsLoggedIn()
 		// 是否已经登录
 		if !login {
-			fmt.Println("Please sign in before cancle a meeting")
+			fmt.Println("Please sign in before clear all meetings!")
 			os.Exit(0)
 		}
 		models.Logger.SetPrefix("[agenda mtclear]")
@@ -50,7 +50,7 @@ var mtclearCmd = &cobra.Command{
 		}
 		entity.WriteMeetingToFile(newMeetingRecord)
 		fmt.Println("All meetings of user", loggedUser.Username, "are cancelled!")
-		models.Logger.Println("Cancel meetings success of user:", loggedUser.Username)
+		models.Logger.Println("Sucessfully cancel all meetings of user:", loggedUser.Username)
 		os.Exit(0)
 	},
 }

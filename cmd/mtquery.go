@@ -16,22 +16,57 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/sysu-615/agenda/entity"
+	"github.com/sysu-615/agenda/models"
 )
+
+var queryStartTime, queryEndTime string
 
 // mtqueryCmd represents the mtquery command
 var mtqueryCmd = &cobra.Command{
 	Use:   "mtquery",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Use mtquery to query the meetings in the Time Range start to end",
+	Long:  `Use mtquery to query the meetings in the Time Range start to end [agenda mtquery -s startTime -e endTime ]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("mtquery called")
+		login, loginUser := entity.IsLoggedIn()
+		// 是否已经登录
+		if !login {
+			fmt.Println("Please sign in before query a meeting")
+			os.Exit(0)
+		}
+		models.Logger.SetPrefix("[agenda mtquery]")
+		//判断参数是否合法
+		if queryEndTime == "" || queryStartTime == "" {
+			fmt.Println("The start time and end time cann't be empty!")
+			os.Exit(0)
+		} else if queryEndTime < queryStartTime {
+			fmt.Println("The start time cann't be greater than the end time!")
+			os.Exit(0)
+		}
+		//查找会议
+		meetings := entity.FetchMeetingsByName(loginUser.Username)
+		var queryedMeetings []models.Meeting
+		for _, meeting := range meetings {
+			if (meeting.StartTime >= queryStartTime && meeting.StartTime < queryEndTime) || (meeting.EndTime > queryStartTime && meeting.EndTime <= queryEndTime) {
+				queryedMeetings = append(queryedMeetings, meeting)
+			}
+		}
+		if len(queryedMeetings) == 0 {
+			//查找失败
+			models.Logger.Println("Failed to find the meeting between:", queryStartTime, queryEndTime)
+			fmt.Println("Failed to find the meeting between:", queryStartTime, queryEndTime)
+		} else {
+			models.Logger.Println("Success to find the meeting between:", queryStartTime, queryEndTime)
+			fmt.Println("Success to find the meeting between:", queryStartTime, queryEndTime)
+			for i, meeting := range queryedMeetings {
+				fmt.Println("[", i+1, "]:", meeting.Title, meeting.Originator, meeting.StartTime, meeting.EndTime, meeting.Participants)
+			}
+			os.Exit(0)
+		}
 	},
 }
 
@@ -47,4 +82,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// mtqueryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	mtqueryCmd.Flags().StringVarP(&queryStartTime, "start time of meetings", "s", "", "the start time of meetings you want to query")
+	mtqueryCmd.Flags().StringVarP(&queryEndTime, "end time of meetings", "e", "", "the end time of meetings you want to query")
 }
