@@ -23,7 +23,7 @@ import (
 	"github.com/sysu-615/agenda/models"
 )
 
-var meetingTitle string
+var canceledMeetingTitle string
 
 // mtcancelCmd represents the mtcancel command
 var mtcancelCmd = &cobra.Command{
@@ -40,17 +40,17 @@ var mtcancelCmd = &cobra.Command{
 		}
 		models.Logger.SetPrefix("[agenda mtcancel]")
 		//检查输入的会议名称
-		if meetingTitle == "" {
+		if canceledMeetingTitle == "" {
 			fmt.Println("The meeting's title cann't be empty! Please enter the title of the meeting you want to cancel.")
 			os.Exit(0)
 		}
 		//检查会议是否存在
 		meetings := entity.ReadMeetingFromFile()
 		for i, meeting := range meetings {
-			if meeting.Title == meetingTitle {
+			if meeting.Title == canceledMeetingTitle {
 				//检查该用户是否为发起人
 				if meeting.Originator != loggedUser.Username {
-					models.Logger.Println("Failed to delete meeting: ", meetingTitle)
+					models.Logger.Println("Failed to delete meeting: ", canceledMeetingTitle)
 					fmt.Println("You are not the originator of the meeting and have no permission to cancel it!")
 					os.Exit(0)
 				} else {
@@ -61,16 +61,16 @@ var mtcancelCmd = &cobra.Command{
 					}
 
 					entity.WriteMeetingToFile(newMeetingRecord)
-					fmt.Println("the meeting", meetingTitle, "are cancelled!")
-					models.Logger.Println("Cancel meeting success: ", meetingTitle)
+					fmt.Println("the meeting", canceledMeetingTitle, "are cancelled!")
+					models.Logger.Println("Cancel meeting success: ", canceledMeetingTitle)
 					os.Exit(0)
 				}
 			}
 		}
 
 		//会议不存在
-		models.Logger.Println("Failed to delete meeting:", meetingTitle)
-		fmt.Println("The meeting", meetingTitle, "is not exits!")
+		models.Logger.Println("Failed to delete meeting:", canceledMeetingTitle)
+		fmt.Println("The meeting", canceledMeetingTitle, "is not exits!")
 		os.Exit(0)
 	},
 }
@@ -87,5 +87,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// mtcancelCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	mtcancelCmd.Flags().StringVarP(&meetingTitle, "meetingTitle", "t", "", "The title of the meeting which you want to cancel.")
+	mtcancelCmd.Flags().StringVarP(&canceledMeetingTitle, "canceledMeetingTitle", "t", "", "The title of the meeting which you want to cancel.")
 }
