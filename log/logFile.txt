@@ -95,3 +95,11 @@
 [agenda logout]2018/10/27 17:44:04 lxx log out
 [agenda login]2018/10/27 17:44:09 Login lx successfully!
 [agenda mtquery]2018/10/27 17:44:11 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda cm]2018/10/28 11:28:52 Failed to create meeting: first
+[agenda mtquery]2018/10/28 11:29:00 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda ap]2018/10/28 11:29:33 Add participators lxx to meeting forth success!
+[agenda mtquery]2018/10/28 11:29:54 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda ap]2018/10/28 11:31:31 Add participators lxx to meeting forth success!
+[agenda mtquery]2018/10/28 11:31:34 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda ap]2018/10/28 11:32:12 Add participators lxx to meeting forth success!
+[agenda mtquery]2018/10/28 11:32:15 Success to find the meeting between: 2018/02/14 2018/02/20

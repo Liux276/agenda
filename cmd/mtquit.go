@@ -37,10 +37,16 @@ var mtquitCmd = &cobra.Command{
 		login, loginUser := entity.IsLoggedIn()
 		// 是否已经登录
 		if !login {
-			fmt.Println("Please sign in before query a meeting")
+			fmt.Println("Please sign in before quit a meeting")
 			os.Exit(0)
 		}
 		models.Logger.SetPrefix("[agenda mtquit]")
+		//输入会议名称为空
+		if quitMeetingTitle == "" {
+			models.Logger.Println("Quit meeting", quitMeetingTitle, "failed!")
+			fmt.Println("The meeting's title cann't be empty!")
+			os.Exit(0)
+		}
 		// 查找对应会议
 		meetings := entity.ReadMeetingFromFile()
 		for i, meeting := range meetings {
