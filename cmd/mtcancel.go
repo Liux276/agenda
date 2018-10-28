@@ -55,12 +55,8 @@ var mtcancelCmd = &cobra.Command{
 					os.Exit(0)
 				} else {
 					//将该会议删除
-					newMeetingRecord := meetings[:i]
-					for j := i + 1; j < len(meetings); j++ {
-						newMeetingRecord = append(newMeetingRecord, meetings[j])
-					}
-
-					entity.WriteMeetingToFile(newMeetingRecord)
+					meetings = append(meetings[:i], meetings[i+1:]...)
+					entity.WriteMeetingToFile(meetings)
 					fmt.Println("the meeting", canceledMeetingTitle, "are cancelled!")
 					models.Logger.Println("Cancel meeting success: ", canceledMeetingTitle)
 					os.Exit(0)

@@ -103,3 +103,15 @@
 [agenda mtquery]2018/10/28 11:31:34 Success to find the meeting between: 2018/02/14 2018/02/20
 [agenda ap]2018/10/28 11:32:12 Add participators lxx to meeting forth success!
 [agenda mtquery]2018/10/28 11:32:15 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda mtquery]2018/10/28 12:17:31 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda rp]2018/10/28 12:17:49 Remove participators  to meeting forth Failed!
+[agenda rp]2018/10/28 12:17:57 Remove participators lxx from meeting forth success!
+[agenda mtquery]2018/10/28 12:18:00 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda rp]2018/10/28 12:18:03 Remove participators lx from meeting forth success!
+[agenda mtquery]2018/10/28 12:18:06 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda cm]2018/10/28 12:18:19 Create meeting: forth successfully
+[agenda cm]2018/10/28 12:18:33 Create meeting: fifth successfully
+[agenda mtquery]2018/10/28 12:18:36 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda rp]2018/10/28 12:18:49 Remove participators lxx from meeting fifth success!
+[agenda mtquery]2018/10/28 12:18:53 Success to find the meeting between: 2018/02/14 2018/02/20
+[agenda cm]2018/10/28 12:19:07 Create meeting: fifth successfully

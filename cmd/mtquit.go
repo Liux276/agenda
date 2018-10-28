@@ -65,18 +65,12 @@ var mtquitCmd = &cobra.Command{
 							//退出会议
 							if loginUser.Username == meeting.Participants {
 								//唯一的参与者，删除会议
-								newMeetingRecord := meetings[:i]
-								for k := i + 1; k < len(meetings); k++ {
-									newMeetingRecord = append(newMeetingRecord, meetings[k])
-								}
-								entity.WriteMeetingToFile(newMeetingRecord)
+								meetings = append(meetings[:i], meetings[i+1:]...)
+								entity.WriteMeetingToFile(meetings)
 							} else {
 								//从参与者中删除当前用户
-								newParticipators := participators[:j]
-								for l := j + 1; l < len(participators); l++ {
-									newParticipators = append(newParticipators, participators[l])
-								}
-								meetings[i].Participants = strings.Join(newParticipators, ",")
+								participators = append(participators[:j], participators[j+1:]...)
+								meetings[i].Participants = strings.Join(participators, ",")
 								entity.WriteMeetingToFile(meetings)
 							}
 							models.Logger.Println("Quit meeting", quitMeetingTitle, "success!")
