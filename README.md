@@ -14,6 +14,7 @@ Cobra既是一个用来创建强大的现代CLI命令行的golang库，也是一
 所以我们可以首先安装其依赖包：
 在`$GOPATH/src/golang.org/x`目录下（如果没有，则自行创建）用`git clone`下载sys和text项目：
 > git clone https://github.com/golang/sys
+
 > git clone https://github.com/golang/text
 
 然后执行`go get -v github.com/spf13/cobra/cobra`安装即可。
@@ -232,3 +233,9 @@ No user login
 	{"Username":"liux","Password":"345","Telephone":"15978342332","Email":"c@163.com"}
 ]
 ```
+
+## agenda使用
+
+> go get github.com/sysu-615/agenda
+
+之后可以在任意路径下执行agenda register, agenda login……等命令（确保将$GOPATH/bin加入到环境变量中）。
