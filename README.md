@@ -1,66 +1,309 @@
-### agenda
+# entity功能函数介绍：
+## meetingOp.go
+-   ReadMeetingFromFile()
+    ```bash
+    /**
+     * @arguments: nil
+     * @return: []models.Meeting
+     */
+    ```
+    此函数用于获取文件中所存放的所有会议。
+    通过利用文件读操作，包括os、bufio、json-iterator/go等库的使用，我们可以解析meetings.json文件中存储的所有会议并作为models.Meeting切片来返回。
 
-**用户注册(agenda register)**
+-   WriteMeetingToFile()
+    ```bash
+    /**
+     * @arguments: []models.Meeting
+     * @return: nil
+     */
+    ```
+    此函数用于将当前列表中的更新后的所有会议重新写入meetings.json文件中。
+    通过利用文件写操作，包括os、bufio、json-iterator/go等库的使用，我们可以将所有会议编码为json格式的字符串并存储到meetings.json文件中。
 
-1. 注册新用户时，用户需设置一个唯一的用户名和一个密码。另外，还需登记邮箱及电话信息。
-2. 如果注册时提供的用户名已由其他用户使用，应反馈一个适当的出错信息；成功注册后，亦应反馈一个成功注册的信息。
+-   FetchMeetingsByName()
+    ```bash
+    /**
+     * @arguments: name string
+     * @return: []models.Meeting
+     */
+    ```
+    此函数用于根据用户名字来获取该用户参与过的所有会议。
+    通过利用文件读操作，包括os、bufio、json-iterator/go等库的使用，我们遍历整个会议文件，查询该用户参加/主持的所有会议作为modles.Meeting切片来返回。
 
-**用户登录(agenda login)**
+-   RemoveParticipantsByName()
+    ```bash
+    /**
+     * @arguments:  name string, meeting models.Meeting
+     * @return: models.Meeting
+     */
+    ```
+    此函数用于将一个参与人员从一个会议中移除。
+    通过传入的meeting来查询该会议中是否包含该参与人员。如果包含，则将改参与人员删除；否则，不进行任何操作。该函数主要是一个中间过程函数，并不将出以后的meeting存储到文件中，在其他函数中可以调用该函数来完成相应的操作之后再存储。
 
-1. 用户使用用户名和密码登录 Agenda 系统。
-2. 用户名和密码同时正确则登录成功并反馈一个成功登录的信息。否则，登录失败并反馈一个失败登录的信息。
+## meetingOp.go测试
+关于测试，我使用go语言自带的测试框架go test，相关内容不在展开叙述。
+首先定义数据：
+```go
+var meetings = []models.Meeting{
+	{
+		Title:        "first",
+		Originator:   "liuyh73",
+		Participants: "liuyh74,liuyh75",
+		StartTime:    "2018/11/1 10:00:00",
+		EndTime:      "2018/11/1 10:30:00",
+	},
+	{
+		Title:        "second",
+		Originator:   "liu",
+		Participants: "liuyh73,wang",
+		StartTime:    "2018/10/13 21:00:00",
+		EndTime:      "2018/10/13 21:30:00",
+	},
+}
+```
+-   ReadMeetingFromFile和WriteMeetingToFile测试
+    在测试中，我将二者同时进行测试，首先将上面定义的两个会议写入文件中，然后再从文件中读取。如果读取出的数据与上述数据一致，则证明函数测试正确。
+    ```go
+    func TestReadMeetingFromFile_WriteMeetingToFile(t *testing.T) {
+        WriteMeetingToFile(meetings)
+        meetingsRead := ReadMeetingFromFile()
+        if len(meetingsRead) == 2 && meetings[0] == meetingsRead[0] && meetings[1] == meetingsRead[1] {
+            t.Log("ReadMeetingFromFile 和 WriteMeetingToFile 测试通过")
+        } else {
+            t.Error("ReadMeetingFromFile 或者 WriteMeetingToFile 测试失败")
+        }
+    }
+    ```
+-   FetchMeetingsByName测试
+    此函数测试，我找寻两组不同的测试案例：一个为已经参加会议的liuyh73，另一个为未参加会议的liuyh76
+    ```bash
+    func TestFetchMeetingsByName(t *testing.T) {
+        meetingsFetchedByName := FetchMeetingsByName("liuyh73")
+        meetingsFetchedByName2 := FetchMeetingsByName("liuyh76")
+        if len(meetingsFetchedByName) == 2 && len(meetingsFetchedByName2) == 0 {
+            t.Log("FetchMeetingsByName 测试通过")
+        } else {
+            t.Error("FetchMeetingsByName 测试失败")
+        }
+    }
+    ```
+-   RemoveParticipantsByName测试
+    此函数测试，我也找寻两组不同的测试案例：一个为参与会议meeting[0]的liuyh74，另一个为未参与会议meeting[1]（非主持人员）的liu:
+    ```bash
+    func TestRemoveParticipantsByName(t *testing.T) {
+        meetingRemovedByName := RemoveParticipantsByName("liuyh74", meetings[0])
+        meetingRemovedByName2 := RemoveParticipantsByName("liu", meetings[1])
+        if (len(strings.Split(meetingRemovedByName.Participants, ",")) == 1 && meetingRemovedByName.Participants == "liuyh75") &&
+            (len(strings.Split(meetingRemovedByName2.Participants, ",")) == 2 && meetingRemovedByName2.Participants == "liuyh73,wang") {
+            t.Log("RemoveParticipantsByName 测试通过")
+        } else {
+            t.Error("RemoveParticipantsByName 测试失败")
+        }
+    }
+    ```
 
-**用户登出(agenda logout)**
+## userInfoOp.go
+-   ReadUserInfoFromFile()
+    ```bash
+    /**
+     * @arguments: nil
+     * @return: []models.User
+     */
+    ```
+    此函数用于从users.json文件中读取所有用户信息。
+    通过利用文件读操作，包括os、bufio、json-iterator/go等库的使用，我们遍历整个用户信息文件，获取所有用户的models.Meeting切片然后返回。
+-   WriteUserInfoToFile()
+    ```bash
+    /**
+     * @arguments: []models.User
+     * @return: nil
+     */
+    ```
+    此函数用于将当前列表中的更新后的所有用户信息重新写入users.json文件中。
+    通过利用文件写操作，包括os、bufio、json-iterator/go等库的使用，我们可以将所有用户信息编码为json格式的字符串并存储到users.json文件中。
 
-1. 已登录的用户登出系统后，只能使用用户注册和用户登录功能。
+-   SaveCurUserInfo()
+    ```bash
+    /**
+     * @arguments: loginUser models.User
+     * @return: nil
+     */
+    ```
+    此函数用于将当前登陆的用户信息存储到curUser.txt文件中，方便登陆用户信息的存储。
 
-**用户查询(agenda userquery)**
+-   ClearCurUserInfo()
+    ```bash
+    /**
+     * @arguments: nil
+     * @return: nil
+     */
+    ```
+    当登陆用户登出的时候，我们利用os库Truncate函数来将登录用户信息从curUser.txt文件中删除。
 
-1. 已登录的用户可以查看已注册的所有用户的用户名、邮箱及电话信息。
+-   IsLoggedIn()
+    ```bash
+    /**
+     * @arguments: nil
+     * @return: bool, models.User
+     */
+    ```
+    此函数判断当前是否已经已经有用户登录，并且返回登录用户信息。
+    我们可以利用此函数来加一些限定，因为未登录的用户不能进行cm、mtcancel等操作。
 
-**用户删除(agenda ru)**
+-   IsUser()
+    ```bash
+    /**
+     * @arguments: name string
+     * @return: bool
+     */
+    ```
+    此函数用于判端当前用户名是否为已注册的用户，调用ReadUserInfoFromFile并加以判断即可。可以用于在创建、删除会议时判断用户是否存在；或者注册用户时判断该用户名是否已经被注册等。
 
-1. 已登录的用户可以删除本用户账户（即销号）。
-2. 操作成功，需反馈一个成功注销的信息；否则，反馈一个失败注销的信息。
-3. 删除成功则退出系统登录状态。删除后，该用户账户不再存在。
-4. 用户账户删除以后：
-   - 以该用户为 发起者 的会议将被删除
-   - 以该用户为 参与者 的会议将从 参与者 列表中移除该用户。若因此造成会议 参与者 人数为0，则会议也将被删除。
+-   RemoveUser()
+    ```bash
+    /**
+     * @arguments: name string
+     * @return: nil
+     */
+    ```
+    此函数用于移除用处，主要是方便ru操作。调用ReadUserInfoFromFile获取用户信息，加以处理后再调用WriteUserInfoToFile更新用户信息即可。
 
-**创建会议(agenda cm)**
 
-1. 已登录的用户可以添加一个新会议到其议程安排中。会议可以在多个已注册 用户间举行，不允许包含未注册用户。添加会议时提供的信息应包括：
-   - 会议主题(title)（在会议列表中具有唯一性）
-   - 会议发起者(originator)
-   - 会议参与者(participator)
-   - 会议起始时间(start time)
-   - 会议结束时间(end time)
-2. 注意，任何用户都无法分身参加多个会议。如果用户已有的会议安排（作为发起者或参与者）与将要创建的会议在时间上重叠 （允许仅有端点重叠的情况），则无法创建该会议。
-3. 用户应获得适当的反馈信息，以便得知是成功地创建了新会议，还是在创建过程中出现了某些错误。
+## userInfoOp.go测试
+首先，定义数据：
+```go
+var users = []models.User{
+	{
+		Username:  "liuyh73",
+		Password:  "123",
+		Telephone: "12364579823",
+		Email:     "a@163.com",
+	},
+	{
+		Username:  "liuyh74",
+		Password:  "123",
+		Telephone: "12364579823",
+		Email:     "a@163.com",
+	},
+}
 
-**增删会议参与者(agenda ap/rp)**
+```
+-   ReadUserInfoFromFile和WriteUserInfoToFile测试
+    在测试中，我将二者同时进行测试，首先将上面定义的两个用户写入文件中，然后再从文件中读取。如果读取出的数据与上述数据一致，则证明函数测试正确。
+    具体代码与测试会议的代码基本一致，不再赘述。
+-   SaveCurUserInfo测试
+    假设"liuyh73"为登录用户，将其保存在curUser.txt中，然后再从中读取出数据，若该数据等于users[0]，则测试正确。
+    ```go
+    func TestSaveCurUserInfo(t *testing.T) {
+        // 假设登陆用户为liuyh73
+        SaveCurUserInfo(users[0])
+        file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
+        defer file.Close()
 
-1. 已登录的用户可以向 自己发起的某一会议增加/删除 参与者 。
-2. 增加参与者时需要做 时间重叠 判断（允许仅有端点重叠的情况）。
-3. 删除会议参与者后，若因此造成会议 参与者 人数为0，则会议也将被删除。
+        if err != nil {
+            panic(err)
+        }
+        var loginUser models.User
+        reader := bufio.NewReader(file)
+        data, _ := reader.ReadBytes('\n')
 
-**查询会议(agenda mtquery)**
+        jsoniter.Unmarshal(data, &loginUser)
+        if loginUser == users[0] {
+            t.Log("SaveCurUserInfo 测试通过")
+        } else {
+            t.Error("SaveCurUserInfo 测试失败")
+        }
+    }
+    ```
+-   IsLoggedIn测试
+    判断登陆的用户是否为liuyh73即可。
+    ```go
+    func TestIsLoggedIn(t *testing.T) {
+        login, loginUser := IsLoggedIn()
+        if login && loginUser == users[0] {
+            t.Log("IsLoggedIn 测试通过")
+        } else {
+            t.Error("IsLoggedIn 测试失败")
+        }
+    }
+    ```
+-   ClearCurUserInfo测试
+    将当前登陆的用户从curUser.txt中移除，重新读取该文件，若该文件为空，则测试正确。
+    ```go
+    func TestClearCurUserInfo(t *testing.T) {
+        ClearCurUserInfo()
+        file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
+        defer file.Close()
 
-1. 已登录的用户可以查询自己的议程在某一时间段(time interval)内的所有会议安排。
-2. 用户给出所关注时间段的起始时间和终止时间，返回该用户议程中在指定时间范围内找到的所有会议安排的列表。
-3. 在列表中给出每一会议的起始时间、终止时间、主题、以及发起者和参与者。
-4. 注意，查询会议的结果应包括用户作为 发起者或参与者 的会议。
-
-**取消会议(agenda mtcancel)**
-
-1. 已登录的用户可以取消 自己发起 的某一会议安排。
-2. 取消会议时，需提供唯一标识：会议主题（title）。
-
-**退出会议(agenda mtquit)**
-
-1. 已登录的用户可以退出 自己参与 的某一会议安排。
-2. 退出会议时，需提供一个唯一标识：会议主题（title）。若因此造成会议 参与者 人数为0，则会议也将被删除。
-
-**清空会议(agenda mtclear)**
-
-1. 已登录的用户可以清空 自己发起 的所有会议安排。
+        if err != nil {
+            panic(err)
+        }
+        reader := bufio.NewReader(file)
+        data, err := reader.ReadBytes('\n')
+        if string(data) == "" && err == io.EOF {
+            t.Log("ClearCurUserInfo 测试通过")
+        } else {
+            t.Error("ClearCurUserInfo 测试失败")
+        }
+    }
+    ```
+-   IsUser测试
+    找寻两组数据：一个是已注册用户liuyh73，另一个为未注册用户liuyh75.
+    ```go
+    func TestIsUser(t *testing.T) {
+        isUser := IsUser("liuyh73")
+        isNotUser := IsUser("liuyh75")
+        if isUser && !isNotUser {
+            t.Log("IsUser 测试通过")
+        } else {
+            t.Error("IsUser 测试失败")
+        }
+    }
+    ```
+-   RemoveUser测试
+    删除用户，然后读取文件获取用户数量，判断是否删除成功。
+    ```go
+    func TestRemoveUser(t *testing.T) {
+        RemoveUser("liuyh73")
+        users := ReadUserInfoFromFile()
+        RemoveUser("liuyh74")
+        users2 := ReadUserInfoFromFile()
+        if len(users) == 1 && len(users2) == 0 {
+            t.Log("RemoveUser 测试通过")
+        } else {
+            t.Error("RemoveUser 测试失败")
+        }
+    }
+    ```
+## 测试结果
+```bash
+=== RUN   TestReadMeetingFromFile_WriteMeetingToFile
+--- PASS: TestReadMeetingFromFile_WriteMeetingToFile (0.00s)
+    meetingOp_test.go:31: ReadMeetingFromFile 和 WriteMeetingToFile 测试通过
+=== RUN   TestFetchMeetingsByName
+--- PASS: TestFetchMeetingsByName (0.00s)
+    meetingOp_test.go:41: FetchMeetingsByName 测试通过
+=== RUN   TestRemoveParticipantsByName
+--- PASS: TestRemoveParticipantsByName (0.00s)
+    meetingOp_test.go:52: RemoveParticipantsByName 测试通过
+=== RUN   TestReadUserInfoFromFile_WriteUserInfoToFile
+--- PASS: TestReadUserInfoFromFile_WriteUserInfoToFile (0.00s)
+    userInfoOp_test.go:33: ReadUserInfoFromFile 和 WriteUserInfoToFile 测试通过
+=== RUN   TestSaveCurUserInfo
+--- PASS: TestSaveCurUserInfo (0.00s)
+    userInfoOp_test.go:54: SaveCurUserInfo 测试通过
+=== RUN   TestIsLoggedIn
+--- PASS: TestIsLoggedIn (0.00s)
+    userInfoOp_test.go:63: IsLoggedIn 测试通过
+=== RUN   TestClearCurUserInfo
+--- PASS: TestClearCurUserInfo (0.00s)
+    userInfoOp_test.go:80: ClearCurUserInfo 测试通过
+=== RUN   TestIsUser
+--- PASS: TestIsUser (0.00s)
+    userInfoOp_test.go:90: IsUser 测试通过
+=== RUN   TestRemoveUser
+--- PASS: TestRemoveUser (0.00s)
+    userInfoOp_test.go:102: RemoveUser 测试通过
+PASS
+ok      github.com/sysu-615/agenda/entity       0.480s
+```
