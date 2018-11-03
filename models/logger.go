@@ -24,7 +24,6 @@ func init() {
 	file, _ := exec.LookPath(os.Args[0])
 	path, _ := filepath.Abs(file)
 	index := strings.LastIndex(path, string(os.PathSeparator))
-
 	// the current path will be $GOPATH/bin
 	// so I here truncate the bin and add src to get $GOPATH/src
 	ExecPath = path[:index-3] + "src/"
