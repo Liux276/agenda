@@ -6,13 +6,14 @@ import (
 	"io"
 	"log"
 	"os"
+
 	"github.com/json-iterator/go"
 	"github.com/sysu-615/agenda/models"
 )
 
 func ReadUserInfoFromFile() []models.User {
 	var list []models.User
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 
 	if err != nil {
@@ -52,7 +53,7 @@ func ReadUserInfoFromFile() []models.User {
 }
 
 func WriteUserInfoToFile(list []models.User) {
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/users.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	defer file.Close()
 
 	if err != nil {
@@ -87,7 +88,7 @@ func WriteUserInfoToFile(list []models.User) {
 }
 
 func SaveCurUserInfo(loginUser models.User) {
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 
 	if err != nil {
@@ -109,14 +110,14 @@ func SaveCurUserInfo(loginUser models.User) {
 }
 
 func ClearCurUserInfo() {
-	err := os.Truncate("github.com/sysu-615/agenda/storage/curUser.txt", 0)
+	err := os.Truncate(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", 0)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func IsLoggedIn() (bool, models.User) {
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 
 	if err != nil {

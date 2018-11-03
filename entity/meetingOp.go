@@ -2,18 +2,19 @@ package entity
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"os"
-	"fmt"
 	"strings"
+
 	"github.com/json-iterator/go"
 	"github.com/sysu-615/agenda/models"
 )
 
 func ReadMeetingFromFile() []models.Meeting {
 	var list []models.Meeting
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meetings.json", os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/meetings.json", os.O_RDWR|os.O_CREATE, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -49,7 +50,7 @@ func ReadMeetingFromFile() []models.Meeting {
 }
 
 func WriteMeetingToFile(list []models.Meeting) {
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meetings.json",  os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/meetings.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	defer file.Close()
 	if err != nil {
 		panic(err)
@@ -85,7 +86,7 @@ func WriteMeetingToFile(list []models.Meeting) {
 
 func FetchMeetingsByName(name string) []models.Meeting {
 	var list []models.Meeting
-	file, err := os.OpenFile("github.com/sysu-615/agenda/storage/meetings.json", os.O_RDWR, 0600)
+	file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/meetings.json", os.O_RDWR, 0600)
 	defer file.Close()
 	if err != nil {
 		panic(err)
