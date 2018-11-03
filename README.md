@@ -1,309 +1,234 @@
-# entity功能函数介绍：
-## meetingOp.go
--   ReadMeetingFromFile()
-    ```bash
-    /**
-     * @arguments: nil
-     * @return: []models.Meeting
-     */
-    ```
-    此函数用于获取文件中所存放的所有会议。
-    通过利用文件读操作，包括os、bufio、json-iterator/go等库的使用，我们可以解析meetings.json文件中存储的所有会议并作为models.Meeting切片来返回。
+# agenda
 
--   WriteMeetingToFile()
-    ```bash
-    /**
-     * @arguments: []models.Meeting
-     * @return: nil
-     */
-    ```
-    此函数用于将当前列表中的更新后的所有会议重新写入meetings.json文件中。
-    通过利用文件写操作，包括os、bufio、json-iterator/go等库的使用，我们可以将所有会议编码为json格式的字符串并存储到meetings.json文件中。
+agenda是一个用于帮助用户创建会议，并且管理会议的命令行工具。
 
--   FetchMeetingsByName()
-    ```bash
-    /**
-     * @arguments: name string
-     * @return: []models.Meeting
-     */
-    ```
-    此函数用于根据用户名字来获取该用户参与过的所有会议。
-    通过利用文件读操作，包括os、bufio、json-iterator/go等库的使用，我们遍历整个会议文件，查询该用户参加/主持的所有会议作为modles.Meeting切片来返回。
+## cobra使用
 
--   RemoveParticipantsByName()
-    ```bash
-    /**
-     * @arguments:  name string, meeting models.Meeting
-     * @return: models.Meeting
-     */
-    ```
-    此函数用于将一个参与人员从一个会议中移除。
-    通过传入的meeting来查询该会议中是否包含该参与人员。如果包含，则将改参与人员删除；否则，不进行任何操作。该函数主要是一个中间过程函数，并不将出以后的meeting存储到文件中，在其他函数中可以调用该函数来完成相应的操作之后再存储。
+Cobra既是一个用来创建强大的现代CLI命令行的golang库，也是一个生成程序应用和命令行文件的程序。此命令行工具基于cobra开发：
 
-## meetingOp.go测试
-关于测试，我使用go语言自带的测试框架go test，相关内容不在展开叙述。
-首先定义数据：
-```go
-var meetings = []models.Meeting{
-	{
-		Title:        "first",
-		Originator:   "liuyh73",
-		Participants: "liuyh74,liuyh75",
-		StartTime:    "2018/11/1 10:00:00",
-		EndTime:      "2018/11/1 10:30:00",
-	},
-	{
-		Title:        "second",
-		Originator:   "liu",
-		Participants: "liuyh73,wang",
-		StartTime:    "2018/10/13 21:00:00",
-		EndTime:      "2018/10/13 21:30:00",
-	},
-}
-```
--   ReadMeetingFromFile和WriteMeetingToFile测试
-    在测试中，我将二者同时进行测试，首先将上面定义的两个会议写入文件中，然后再从文件中读取。如果读取出的数据与上述数据一致，则证明函数测试正确。
-    ```go
-    func TestReadMeetingFromFile_WriteMeetingToFile(t *testing.T) {
-        WriteMeetingToFile(meetings)
-        meetingsRead := ReadMeetingFromFile()
-        if len(meetingsRead) == 2 && meetings[0] == meetingsRead[0] && meetings[1] == meetingsRead[1] {
-            t.Log("ReadMeetingFromFile 和 WriteMeetingToFile 测试通过")
-        } else {
-            t.Error("ReadMeetingFromFile 或者 WriteMeetingToFile 测试失败")
-        }
-    }
-    ```
--   FetchMeetingsByName测试
-    此函数测试，我找寻两组不同的测试案例：一个为已经参加会议的liuyh73，另一个为未参加会议的liuyh76
-    ```bash
-    func TestFetchMeetingsByName(t *testing.T) {
-        meetingsFetchedByName := FetchMeetingsByName("liuyh73")
-        meetingsFetchedByName2 := FetchMeetingsByName("liuyh76")
-        if len(meetingsFetchedByName) == 2 && len(meetingsFetchedByName2) == 0 {
-            t.Log("FetchMeetingsByName 测试通过")
-        } else {
-            t.Error("FetchMeetingsByName 测试失败")
-        }
-    }
-    ```
--   RemoveParticipantsByName测试
-    此函数测试，我也找寻两组不同的测试案例：一个为参与会议meeting[0]的liuyh74，另一个为未参与会议meeting[1]（非主持人员）的liu:
-    ```bash
-    func TestRemoveParticipantsByName(t *testing.T) {
-        meetingRemovedByName := RemoveParticipantsByName("liuyh74", meetings[0])
-        meetingRemovedByName2 := RemoveParticipantsByName("liu", meetings[1])
-        if (len(strings.Split(meetingRemovedByName.Participants, ",")) == 1 && meetingRemovedByName.Participants == "liuyh75") &&
-            (len(strings.Split(meetingRemovedByName2.Participants, ",")) == 2 && meetingRemovedByName2.Participants == "liuyh73,wang") {
-            t.Log("RemoveParticipantsByName 测试通过")
-        } else {
-            t.Error("RemoveParticipantsByName 测试失败")
-        }
-    }
-    ```
+### cobra安装
 
-## userInfoOp.go
--   ReadUserInfoFromFile()
-    ```bash
-    /**
-     * @arguments: nil
-     * @return: []models.User
-     */
-    ```
-    此函数用于从users.json文件中读取所有用户信息。
-    通过利用文件读操作，包括os、bufio、json-iterator/go等库的使用，我们遍历整个用户信息文件，获取所有用户的models.Meeting切片然后返回。
--   WriteUserInfoToFile()
-    ```bash
-    /**
-     * @arguments: []models.User
-     * @return: nil
-     */
-    ```
-    此函数用于将当前列表中的更新后的所有用户信息重新写入users.json文件中。
-    通过利用文件写操作，包括os、bufio、json-iterator/go等库的使用，我们可以将所有用户信息编码为json格式的字符串并存储到users.json文件中。
+直接执行以下命令，可能安装不成功:（因为cobra用到的一些依赖包被墙了）
+> go get -v github.com/spf13/cobra/cobra
 
--   SaveCurUserInfo()
-    ```bash
-    /**
-     * @arguments: loginUser models.User
-     * @return: nil
-     */
-    ```
-    此函数用于将当前登陆的用户信息存储到curUser.txt文件中，方便登陆用户信息的存储。
+所以我们可以首先安装其依赖包：
+在`$GOPATH/src/golang.org/x`目录下（如果没有，则自行创建）用`git clone`下载sys和text项目：
+> git clone https://github.com/golang/sys
+> git clone https://github.com/golang/text
 
--   ClearCurUserInfo()
-    ```bash
-    /**
-     * @arguments: nil
-     * @return: nil
-     */
-    ```
-    当登陆用户登出的时候，我们利用os库Truncate函数来将登录用户信息从curUser.txt文件中删除。
+然后执行`go get -v github.com/spf13/cobra/cobra`安装即可。
+若成功安装，则在`$GOBIN`下会出现cobra可执行程序，如果没有配置`$GOBIN`,则可自行去`$GOPATH/bin`下寻找该文件。
+然后在命令行中输入`cobra`:
 
--   IsLoggedIn()
-    ```bash
-    /**
-     * @arguments: nil
-     * @return: bool, models.User
-     */
-    ```
-    此函数判断当前是否已经已经有用户登录，并且返回登录用户信息。
-    我们可以利用此函数来加一些限定，因为未登录的用户不能进行cm、mtcancel等操作。
-
--   IsUser()
-    ```bash
-    /**
-     * @arguments: name string
-     * @return: bool
-     */
-    ```
-    此函数用于判端当前用户名是否为已注册的用户，调用ReadUserInfoFromFile并加以判断即可。可以用于在创建、删除会议时判断用户是否存在；或者注册用户时判断该用户名是否已经被注册等。
-
--   RemoveUser()
-    ```bash
-    /**
-     * @arguments: name string
-     * @return: nil
-     */
-    ```
-    此函数用于移除用处，主要是方便ru操作。调用ReadUserInfoFromFile获取用户信息，加以处理后再调用WriteUserInfoToFile更新用户信息即可。
-
-
-## userInfoOp.go测试
-首先，定义数据：
-```go
-var users = []models.User{
-	{
-		Username:  "liuyh73",
-		Password:  "123",
-		Telephone: "12364579823",
-		Email:     "a@163.com",
-	},
-	{
-		Username:  "liuyh74",
-		Password:  "123",
-		Telephone: "12364579823",
-		Email:     "a@163.com",
-	},
-}
-
-```
--   ReadUserInfoFromFile和WriteUserInfoToFile测试
-    在测试中，我将二者同时进行测试，首先将上面定义的两个用户写入文件中，然后再从文件中读取。如果读取出的数据与上述数据一致，则证明函数测试正确。
-    具体代码与测试会议的代码基本一致，不再赘述。
--   SaveCurUserInfo测试
-    假设"liuyh73"为登录用户，将其保存在curUser.txt中，然后再从中读取出数据，若该数据等于users[0]，则测试正确。
-    ```go
-    func TestSaveCurUserInfo(t *testing.T) {
-        // 假设登陆用户为liuyh73
-        SaveCurUserInfo(users[0])
-        file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
-        defer file.Close()
-
-        if err != nil {
-            panic(err)
-        }
-        var loginUser models.User
-        reader := bufio.NewReader(file)
-        data, _ := reader.ReadBytes('\n')
-
-        jsoniter.Unmarshal(data, &loginUser)
-        if loginUser == users[0] {
-            t.Log("SaveCurUserInfo 测试通过")
-        } else {
-            t.Error("SaveCurUserInfo 测试失败")
-        }
-    }
-    ```
--   IsLoggedIn测试
-    判断登陆的用户是否为liuyh73即可。
-    ```go
-    func TestIsLoggedIn(t *testing.T) {
-        login, loginUser := IsLoggedIn()
-        if login && loginUser == users[0] {
-            t.Log("IsLoggedIn 测试通过")
-        } else {
-            t.Error("IsLoggedIn 测试失败")
-        }
-    }
-    ```
--   ClearCurUserInfo测试
-    将当前登陆的用户从curUser.txt中移除，重新读取该文件，若该文件为空，则测试正确。
-    ```go
-    func TestClearCurUserInfo(t *testing.T) {
-        ClearCurUserInfo()
-        file, err := os.OpenFile(models.ExecPath+"github.com/sysu-615/agenda/storage/curUser.txt", os.O_RDWR|os.O_CREATE, 0644)
-        defer file.Close()
-
-        if err != nil {
-            panic(err)
-        }
-        reader := bufio.NewReader(file)
-        data, err := reader.ReadBytes('\n')
-        if string(data) == "" && err == io.EOF {
-            t.Log("ClearCurUserInfo 测试通过")
-        } else {
-            t.Error("ClearCurUserInfo 测试失败")
-        }
-    }
-    ```
--   IsUser测试
-    找寻两组数据：一个是已注册用户liuyh73，另一个为未注册用户liuyh75.
-    ```go
-    func TestIsUser(t *testing.T) {
-        isUser := IsUser("liuyh73")
-        isNotUser := IsUser("liuyh75")
-        if isUser && !isNotUser {
-            t.Log("IsUser 测试通过")
-        } else {
-            t.Error("IsUser 测试失败")
-        }
-    }
-    ```
--   RemoveUser测试
-    删除用户，然后读取文件获取用户数量，判断是否删除成功。
-    ```go
-    func TestRemoveUser(t *testing.T) {
-        RemoveUser("liuyh73")
-        users := ReadUserInfoFromFile()
-        RemoveUser("liuyh74")
-        users2 := ReadUserInfoFromFile()
-        if len(users) == 1 && len(users2) == 0 {
-            t.Log("RemoveUser 测试通过")
-        } else {
-            t.Error("RemoveUser 测试失败")
-        }
-    }
-    ```
-## 测试结果
 ```bash
-=== RUN   TestReadMeetingFromFile_WriteMeetingToFile
---- PASS: TestReadMeetingFromFile_WriteMeetingToFile (0.00s)
-    meetingOp_test.go:31: ReadMeetingFromFile 和 WriteMeetingToFile 测试通过
-=== RUN   TestFetchMeetingsByName
---- PASS: TestFetchMeetingsByName (0.00s)
-    meetingOp_test.go:41: FetchMeetingsByName 测试通过
-=== RUN   TestRemoveParticipantsByName
---- PASS: TestRemoveParticipantsByName (0.00s)
-    meetingOp_test.go:52: RemoveParticipantsByName 测试通过
-=== RUN   TestReadUserInfoFromFile_WriteUserInfoToFile
---- PASS: TestReadUserInfoFromFile_WriteUserInfoToFile (0.00s)
-    userInfoOp_test.go:33: ReadUserInfoFromFile 和 WriteUserInfoToFile 测试通过
-=== RUN   TestSaveCurUserInfo
---- PASS: TestSaveCurUserInfo (0.00s)
-    userInfoOp_test.go:54: SaveCurUserInfo 测试通过
-=== RUN   TestIsLoggedIn
---- PASS: TestIsLoggedIn (0.00s)
-    userInfoOp_test.go:63: IsLoggedIn 测试通过
-=== RUN   TestClearCurUserInfo
---- PASS: TestClearCurUserInfo (0.00s)
-    userInfoOp_test.go:80: ClearCurUserInfo 测试通过
-=== RUN   TestIsUser
---- PASS: TestIsUser (0.00s)
-    userInfoOp_test.go:90: IsUser 测试通过
-=== RUN   TestRemoveUser
---- PASS: TestRemoveUser (0.00s)
-    userInfoOp_test.go:102: RemoveUser 测试通过
-PASS
-ok      github.com/sysu-615/agenda/entity       0.480s
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.
+
+Usage:
+  cobra [command]
+
+Available Commands:
+  add         Add a command to a Cobra Application
+  help        Help about any command
+  init        Initialize a Cobra Application
+```
+
+如果出现以上提示则表示安装成功。
+
+### cobra使用
+
+1. 生成agenda项目
+
+```bash
+$ cobra init agenda
+```
+
+2. 添加agenda工具命令
+
+```bash
+$ cobra add [命令名称]
+```
+
+3. cobra工作原理
+
+```bash
+agenda
+  |─ cmd
+  |  |─ register
+  |  |─ login
+  |  |─ 
+  |  └─ ……
+  |─ LICENSE
+  └─ main.go
+```
+
+**main.go**文件如下：
+
+```go
+package main
+import "agenda/cmd"
+func main() {
+  cmd.Execute()
+}
+```
+主函数中调用了cmd.Execute()，此函数便启动了整个项目。
+
+**cmd/root.go**:
+
+```go
+var rootCmd = &cobra.Command{
+  Use:   "hugo",
+  Short: "Hugo is a very fast static site generator",
+  Long: `A Fast and Flexible Static Site Generator built with
+                love by spf13 and friends in Go.
+                Complete documentation is available at http://hugo.spf13.com`,
+  Run: func(cmd *cobra.Command, args []string) {
+    // Do Stuff Here
+  },
+}
+
+func Execute() {
+  if err := rootCmd.Execute(); err != nil {
+    fmt.Println(err)
+    os.Exit(1)
+  }
+}
+```
+
+root.go中定义了Execute()函数，在该函数中，启动了rootCmd.Execute()函数，内部实现中监听了所有命令。
+
+除此之外，我们还可以定义flag来处理命令行参数：
+
+```go
+func init() {
+  cobra.OnInitialize(initConfig)
+  rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
+  rootCmd.PersistentFlags().StringVarP(&projectBase, "projectbase", "b", "", "base project directory eg. github.com/spf13/")
+  rootCmd.PersistentFlags().StringP("author", "a", "YOUR NAME", "Author name for copyright attribution")
+  rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "Name of license for the project (can provide `licensetext` in config)")
+  rootCmd.PersistentFlags().Bool("viper", true, "Use Viper for configuration")
+  viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
+  viper.BindPFlag("projectbase", rootCmd.PersistentFlags().Lookup("projectbase"))
+  viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
+  viper.SetDefault("author", "NAME HERE <EMAIL ADDRESS>")
+  viper.SetDefault("license", "apache")
+}
+```
+
+上述函数中定义了一些变量，这些变量我在agenda实现中并未接触到，接下来需要进一步学习。
+
+## 命令介绍
+
+有关agenda的命令，详见[commandIntro.md](./docs/commandIntro.md)。
+
+## 文件结构介绍
+
+```bash
+agenda
+├─ cmd
+|   |─ ap.go
+|   |─ cm.go
+|   |─ login.go
+|   |─ logout.go
+|   |─ mtcancel.go
+|   |─ mtquery.go
+|   |─ mtquit.go
+|   |─ register.go
+|   |─ root.go
+|   |─ rp.go
+|   |─ ru.go
+|   └─ userquery.go
+├─ docs
+|   |─ commandIntro.md
+|   |─ entity.md
+|   |─ models.md
+├─ entity
+|   |─ meetingOp.gp
+|   |─ userInfoOp.go
+|   |─ meetingOp_test.go
+|   └─ userInfoOp.go
+├─ log
+|   └─ logFile.txt
+├─ models
+|   ├─ logger.go
+|   ├─ meeting.go
+|   └─ user.go
+├─ storage
+|   ├─ curUser.txt
+|   ├─ meetings.json
+|   └─ users.json
+├─ LICENSE
+├─ main.go
+└─ README.md
+```
+
+## entity介绍
+
+有关entity中函数定义，详见[entity.md](./docs/entity.md)。
+
+## 测试结果
+
+简单测试：（有些命令并没有测试到）
+
+```bash
+// 注册liuyh73
+λ agenda register -uliuyh73 -p123 -P15976541234 -ea@163.com
+Register liuyh73 successfully!
+
+// 登录liuyh73
+λ agenda login -uliuyh73 -p123
+Login successfully
+
+// 注册liuyt
+λ agenda register -uliuyt -p234 -P15912345432 -eb@163.com
+Register liuyt successfully!
+
+// 注册liux
+λ agenda register -uliux -p345 -P15978342332 -ec@163.com
+Register liux successfully!
+
+// 登录liuyt
+λ agenda login -uliuyt -p234
+liuyh73 has already in
+
+// 创建会议test
+λ agenda cm -ttest -oliuyh73 -pliuyt,liux -s="2018/11/1 10:20:00" -e="2018/11/1 11:00:00"
+Create meeting: test successfully
+
+// 船舰会议时间冲突
+λ agenda cm -ttest -oliuyh73 -pliuyt -s="2018/11/1 10:30:00" -e="2018/11/1 11:10:00"
+Some meetings of the sponsor("liuyh73")conflict with the meeting in terms of time.
+
+// 创建会议liu未注册
+λ agenda cm -ttest -oliuyh73 -pliuyt,liux,liu -s="2018/11/1 10:20:00" -e="2018/11/1 11:00:00"
+The participator liu has not yet registered
+
+// 移除参与者liux
+λ agenda rp -ttest -pliux
+rp called
+Remove participators liux from meeting test success!
+
+// 取消会议test
+λ agenda mtcancel -ttest
+mtcancel called
+the meeting test are cancelled!
+
+// 移除用户
+λ agenda ru liuyh73
+Remove user [liuyh73] successfully
+
+// 退出用户
+λ agenda logout
+No user login
+
+```
+
+最终，meetings.json、curUser.txt文件为空，users.json存在以下两条记录:
+
+```bash
+[
+	{"Username":"liuyt","Password":"234","Telephone":"15912345432","Email":"b@163.com"},
+	{"Username":"liux","Password":"345","Telephone":"15978342332","Email":"c@163.com"}
+]
 ```
